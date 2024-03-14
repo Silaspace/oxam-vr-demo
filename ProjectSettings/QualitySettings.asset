@@ -255,20 +255,20 @@ QualitySettings:
     name: Ultra
     pixelLightCount: 1
     shadows: 2
-    shadowResolution: 2
+    shadowResolution: 3
     shadowProjection: 0
     shadowCascades: 4
     shadowDistance: 150
     shadowNearPlaneOffset: 3
-    shadowCascade2Split: 0.33333334
-    shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowCascade2Split: 0.35975915
+    shadowCascade4Split: {x: 0.300233, y: 0.6000002, z: 0.90023327}
     shadowmaskMode: 1
     skinWeights: 4
     globalTextureMipmapLimit: 0
     textureMipmapLimitSettings: []
     anisotropicTextures: 1
     antiAliasing: 2
-    softParticles: 1
+    softParticles: 0
     softVegetation: 1
     realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 1
@@ -302,7 +302,7 @@ QualitySettings:
     excludedTargetPlatforms: []
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
-    Android: 4
+    Android: 5
     Lumin: 5
     Nintendo 3DS: 5
     Nintendo Switch: 5
