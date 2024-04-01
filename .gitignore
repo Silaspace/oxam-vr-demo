@@ -73,3 +73,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+## Datasets
+Assets/Data/AmazonOrderbook/data
+Assets/Data/MusicGenrePCA/data
+Misc/music-genre-pca/*.csv
