@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class DataPlotter : MonoBehaviour
 {
@@ -28,9 +29,13 @@ public class DataPlotter : MonoBehaviour
     
     // Object which will contain instantiated prefabs in hiearchy
     public GameObject PointHolder;
+
     // Start is called before the first frame update
-    void Start()
+    public void plotData(bool active)
     {
+        // plotData invoked
+        Debug.Log("Start plotting data");
+
         // Set pointlist to results of function Reader with argument inputfile
         pointList = CSVReader.Read(inputfile);
  
