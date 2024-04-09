@@ -21,7 +21,7 @@ public class orderbooksScript : MonoBehaviour
     {
         // Read the contents of the CSV files as individual lines
         //TODO figure out relative file locations in c#
-        string[] csvLines = File.ReadAllLines(@"C:\Users\jimmy\OneDrive - Nexus365\Work\Group Practical\oxam-vr-demo\Assets\Data\orderbooks_appl.csv");
+        string[] csvLines = File.ReadAllLines(@"C:\Users\jimmy\OneDrive - Nexus365\Work\Group Practical\oxam-vr-demo\Assets\Resources\Data\orderbooks_appl.csv");
         var entries = new List<Entry>();
         //dictionary of (price, time) to count
         Dictionary<(float, DateTime), int> points = new Dictionary<(float, DateTime), int>();
