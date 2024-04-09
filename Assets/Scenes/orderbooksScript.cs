@@ -1,23 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using UnityEngine;
 
 public class orderbooksScript : MonoBehaviour
 {
     //define public vars to be changed in inspector
-    public GameObject pointPrefab;
+    public GameObject pointPrefab; //TODO define a point
     public float scale;
     public Material pointMaterial;
 
-    private float processDateTime(DateTime dt)
+    private float dateTimeToFloat(DateTime dt)
     {
-        return (float)0.0; //fix
+        return (float)0.2*(dt.Minute + (1/60)*dt.Second); //fix
     }
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +25,8 @@ public class orderbooksScript : MonoBehaviour
         var entries = new List<Entry>();
         //dictionary of (price, time) to count
         Dictionary<(float, DateTime), int> points = new Dictionary<(float, DateTime), int>();
+
+        float minBidPrice = 10000.0F;
 
         // Get each entry from csv. Placed in a list for now, maybe unnecessary
         // Also maintain a dict for prices
@@ -40,12 +39,12 @@ public class orderbooksScript : MonoBehaviour
             {
                 Quote = rowData[0],
                 Symbol = rowData[1],
-                EventTime = Convert.ToDateTime(rowData[2]),
-                BidTime = Convert.ToDateTime(rowData[3]),
+                EventTime = DateTime.ParseExact(rowData[2].Substring(0,19), "yyyyMMdd-HHmmss.fff", null),
+                BidTime = DateTime.ParseExact(rowData[3].Substring(0,15), "yyyyMMdd-HHmmss", null),
                 BidCode = Convert.ToChar(rowData[4]),
                 BidPrice = Convert.ToSingle(rowData[5]),
                 BidSize = Convert.ToInt16(rowData[6]),
-                AskTime = Convert.ToDateTime(rowData[7]),
+                AskTime = DateTime.ParseExact(rowData[7].Substring(0,15), "yyyyMMdd-HHmmss", null),
                 AskCode = Convert.ToChar(rowData[8]),
                 AskPrice = Convert.ToSingle(rowData[9]),
                 AskSize = Convert.ToInt16(rowData[10])
@@ -59,6 +58,8 @@ public class orderbooksScript : MonoBehaviour
                 points.Add((entry.BidPrice, entry.BidTime), 1);
             }
 
+            minBidPrice = Math.Min(minBidPrice, entry.BidPrice);
+
         }
 
         //get a list of points to plot
@@ -69,8 +70,8 @@ public class orderbooksScript : MonoBehaviour
         //var positions = new List<Vector3>();
         foreach(KeyValuePair<(float, DateTime), int> point in points)
         {
-            float xPos = point.Key.Item1;
-            float yPos = processDateTime(point.Key.Item2);
+            float xPos = point.Key.Item1 - minBidPrice;
+            float yPos = dateTimeToFloat(point.Key.Item2);
             int zPos = point.Value;
 
             var p = Instantiate(pointPrefab, transform);
@@ -78,6 +79,18 @@ public class orderbooksScript : MonoBehaviour
             p.GetComponent<MeshRenderer>().material = pointMaterial;
             //positions.Add(new Vector3(xPos, yPos, zPos));
         }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     // Update is called once per frame
