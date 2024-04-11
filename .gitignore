@@ -76,7 +76,9 @@ crashlytics-build.properties
 
 
 ## Datasets
-Assets/Data/AmazonOrderbook/data
-Assets/Data/MusicGenrePCA/data
-Assets/Data/RoyalMailSharePrice/data
+Assets/Resources/Data/AmazonOrderbook/data
+Assets/Resources/Data/AppleOrderbook/data
+Assets/Resources/Data/RandomData/data
+Assets/Resources/Data/MusicGenrePCA/data
+Assets/Resources/Data/RoyalMailSharePrice/data
 Misc/music-genre-pca/*.csv
