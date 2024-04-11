@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using andywiecko.BurstTriangulator;
+using Unity.Collections;
+using Unity.Mathematics;
 public class MeshGenerator : MonoBehaviour
 {
 
@@ -18,18 +20,23 @@ public class MeshGenerator : MonoBehaviour
 
     public Gradient gradient;
 
-    float minHeight;
-    float maxHeight;
+    float yMin;
+    float yMax;
+    float xMax;
+    float xMin;
+    float zMax;
+    float zMin;
 
     void Start()
     {
         //make mesh
-
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        CreateMesh();
-        UpdateMesh();
+        //CreateMesh();
+        //UpdateMesh();
+
+        Triangulation();
     }
 
 
@@ -41,11 +48,15 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int x = 0; x <= xSize; x++)
             {
-                float y = 0; //change this to be heights
+                float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
                 vertices[i] = new Vector3(x, y, z);
 
-                maxHeight = Math.Max(maxHeight, y);
-                minHeight = Math.Min(minHeight, y);
+                xMax = Math.Max(xMax, x);
+                xMin = Math.Min(xMin, x);
+                yMax = Math.Max(yMax, y);
+                yMin = Math.Min(yMin, y);
+                zMax = Math.Max(zMax, z);
+                zMin = Math.Min(zMin, y);
 
                 i++;
             }
@@ -81,7 +92,7 @@ public class MeshGenerator : MonoBehaviour
         {
             for (int x = 0; x<= xSize; x++)
             {
-                float height = Mathf.InverseLerp(minHeight, maxHeight, vertices[i].y);
+                float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
                 colours[i] = gradient.Evaluate(height);
                 i++;
             }
@@ -93,11 +104,12 @@ public class MeshGenerator : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        mesh.colors = colours;
+        //mesh.colors = colours;
 
         mesh.RecalculateNormals();
     }
 
+    //remove this function to remove dots from mesh
     private void OnDrawGizmos()
     {
         if (vertices == null)
@@ -109,4 +121,54 @@ public class MeshGenerator : MonoBehaviour
         }
     }
 
+    void Triangulation()
+    {
+        //vertices are normally global variable, assigned here to random points for testing
+        int len = 100;
+        vertices = new Vector3[len];
+        System.Random rnd = new System.Random();
+        for (int i = 0; i < len; i++){
+            float x = (float)rnd.NextDouble()*20;
+            float z = (float)rnd.NextDouble()*20;
+            float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
+            vertices[i] = new Vector3(x,y,z);
+        }
+    
+        //turn vertices into float2s for triangulation
+        float2[] points = new float2[vertices.Length];
+        for (int p = 0; p < vertices.Length; p++)
+        {
+            points[p] = new(vertices[p].x, vertices[p].z);
+        }
+
+        //run triangulation, currently no refinement mesh
+        using var positions = new NativeArray<float2>(points, Allocator.Persistent);
+        using var triangulator = new Triangulator(capacity: 1024, Allocator.Persistent)
+        {
+            Input = { Positions = positions },
+            //Settings = {
+            //    RefineMesh = true,
+            //    RefinementThresholds = {
+            //        Area = 1f,
+            //        Angle = math.radians(20f)
+            //    },
+            //}
+        };
+        triangulator.Run();
+
+        //convert to correct type for output
+        var outputTriangles = triangulator.Output.Triangles;
+        int[] finalTriangles = new int[outputTriangles.Length];
+        for (int t = 0; t<finalTriangles.Length; t++)
+        {
+            finalTriangles[t] = outputTriangles[t];
+        }
+
+        //update mesh
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = finalTriangles;
+
+        mesh.RecalculateNormals();
+    }
 }
