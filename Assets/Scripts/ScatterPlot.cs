@@ -1,41 +1,45 @@
 using UnityEngine;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
-public class ScatterPlot : MonoBehaviour
+public class ScatterPlot : MonoBehaviour, isPlotter
 {
-    // Name of the input file, no extension
-    public string inputfile;
 
-    // Scale for the plot
-    public float plotScale = 1;
-
-    // The prefab for the data points to be instantiated
-    public GameObject PointPrefab;
-    
-    // Object which will contain instantiated prefabs in hiearchy
-    public GameObject PointHolder;
-
-    public void plot()
-    {
+    // Particle system
+	ParticleSystem.Particle[] cloud;
+	bool pointsUpdated = false;
+	
+	void Update () 
+	{
+		if (pointsUpdated)
+		{
+            Debug.Log("ScatterPlot.cs :: Update");
+			GetComponent<ParticleSystem>().SetParticles(cloud, cloud.Length);
+			pointsUpdated = false;
+		}
+	}
+	
+	public void plot(string inputFile)
+	{
         // Get vectorList to plot
         Debug.Log("ScatterPlot.cs :: Fetch Data");
-        var vectorList = GetData.fetch(inputfile);
-        
-        // Loop through Pointlist
-        Debug.Log("ScatterPlot.cs :: Plot Data");
-        for (var i = 0; i < vectorList.Count; i++)
-        {
-            // Create new game object
-            GameObject dataPoint = Instantiate(
-                    PointPrefab, 
-                    vectorList[i] * plotScale, 
-                    Quaternion.identity);
+        var positions = GetData.fetch(inputFile);
 
-            // Make dataPoint child of PointHolder object 
-            dataPoint.transform.parent = PointHolder.transform;
-        }
+        // Particle system built
+        Debug.Log("ScatterPlot.cs :: Set Particles");
+		cloud = new ParticleSystem.Particle[positions.Count];
+		
+		for (int i = 0; i < positions.Count; ++i)
+		{
+			cloud[i].position = scale(positions[i]);			
+			cloud[i].startColor = Color.red;
+			cloud[i].startSize = 2f;
+		}
 
-    }
+		pointsUpdated = true;
+	}
+
+	private Vector3 scale(Vector3 position)
+	{
+		return (position * 25) + new Vector3(-10, 0, 0);
+	}
 }
