@@ -84,19 +84,6 @@ public class MeshGenerator : MonoBehaviour
             vert++;
         }
 
-        //create colours for gradient on mesh
-        //TODO currently doesn't work because no rendering pipeline
-        colours = new Color[vertices.Length];
-
-        for (int i = 0, z = 0; z <= zSize; z++)
-        {
-            for (int x = 0; x<= xSize; x++)
-            {
-                float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
-                colours[i] = gradient.Evaluate(height);
-                i++;
-            }
-        }
     }
 
     void UpdateMesh()
@@ -125,6 +112,8 @@ public class MeshGenerator : MonoBehaviour
     {
         //vertices are normally global variable, assigned here to random points for testing
         int len = 100;
+        float yMax = Int32.MinValue;
+        float yMin = Int32.MaxValue;
         vertices = new Vector3[len];
         System.Random rnd = new System.Random();
         for (int i = 0; i < len; i++){
@@ -132,6 +121,9 @@ public class MeshGenerator : MonoBehaviour
             float z = (float)rnd.NextDouble()*20;
             float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
             vertices[i] = new Vector3(x,y,z);
+
+            yMax = Math.Max(yMax, y);
+            yMin = Math.Min(yMin, y);
         }
     
         //turn vertices into float2s for triangulation
@@ -164,10 +156,21 @@ public class MeshGenerator : MonoBehaviour
             finalTriangles[t] = outputTriangles[t];
         }
 
+        //create colours for gradient on mesh
+        //TODO currently doesn't work because no rendering pipeline
+        colours = new Color[vertices.Length];
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
+            colours[i] = gradient.Evaluate(height);
+        }
+
         //update mesh
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = finalTriangles;
+        mesh.colors = colours;
 
         mesh.RecalculateNormals();
     }
