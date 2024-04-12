@@ -23,7 +23,7 @@ public class CSVReader
 
         TextAsset data = Resources.Load(file) as TextAsset; //Loads the TextAsset named in the file argument of the function
 
-        Debug.Log("CSVReader.cs :: Data loaded:" + data); // Print raw data, make sure parsed correctly
+        Debug.Log("CSVReader.cs :: Data loaded:" + data.text); // Print raw data, make sure parsed correctly
 
         var lines = Regex.Split(data.text, LINE_SPLIT_RE); // Split data.text into lines using LINE_SPLIT_RE characters
 

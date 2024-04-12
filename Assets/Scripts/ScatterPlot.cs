@@ -13,8 +13,16 @@ public class ScatterPlot : MonoBehaviour, isPlotter
     private Dictionary<string, Color> labelColorMap;
 
     // Predefined colours for labels, which are used before falling back to random colours for points
+    // From here:  https://jfly.uni-koeln.de/color/
     private List<Color> predefinedColors = new List<Color> {
-        Color.red, Color.blue, Color.green, Color.yellow, Color.magenta
+        new Color32(0xE6, 0x9F, 0x00, 0xFF), // orange
+        new Color32(0x56, 0xB4, 0xE9, 0xFF), // skyblue
+        new Color32(0x00, 0x9E, 0x73, 0xFF), // bluishgreen
+        new Color32(0xF0, 0xE4, 0x42, 0xFF), // yellow
+        new Color32(0x00, 0x72, 0xB2, 0xFF), // blue
+        new Color32(0xD5, 0x5E, 0x00, 0xFF), // vermillion
+        new Color32(0xCC, 0x79, 0xA7, 0xFF), // reddishpurple
+        new Color32(0x99, 0x99, 0x99, 0xFF)  // gray
     };
 
     private int nextColorIndex = 0;
@@ -50,9 +58,10 @@ public class ScatterPlot : MonoBehaviour, isPlotter
 		for (int i = 0; i < positions.Count; ++i)
 		{
 			cloud[i].position = scale(positions[i]);			
-			cloud[i].startSize = 2f;
+			cloud[i].startSize = 0.5f;
 
             if (labels != null && labels.Count > i) {
+                Debug.Log("Setting color");
                 cloud[i].startColor = labelColorMap[labels[i]];
             }
             else {
@@ -77,6 +86,7 @@ public class ScatterPlot : MonoBehaviour, isPlotter
 
         foreach (string label in labels)
         {
+            Debug.Log(labelColorMap);
             if (!labelColorMap.ContainsKey(label))
             {
                 labelColorMap.Add(label, GetUniqueColor());
