@@ -39,7 +39,7 @@ public class MeshGenerator : MonoBehaviour
         Triangulation();
     }
 
-
+    //old code for even meshes
     void CreateMesh()
     {
         vertices = new Vector3[(xSize+1) * (zSize+1)];
@@ -88,10 +88,11 @@ public class MeshGenerator : MonoBehaviour
 
     void UpdateMesh()
     {
+        //update mesh
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        //mesh.colors = colours;
+        mesh.colors = colours;
 
         mesh.RecalculateNormals();
     }
@@ -150,10 +151,10 @@ public class MeshGenerator : MonoBehaviour
 
         //convert to correct type for output
         var outputTriangles = triangulator.Output.Triangles;
-        int[] finalTriangles = new int[outputTriangles.Length];
-        for (int t = 0; t<finalTriangles.Length; t++)
+        triangles = new int[outputTriangles.Length];
+        for (int t = 0; t < triangles.Length; t++)
         {
-            finalTriangles[t] = outputTriangles[t];
+            triangles[t] = outputTriangles[t];
         }
 
         //create colours for gradient on mesh
@@ -166,12 +167,6 @@ public class MeshGenerator : MonoBehaviour
             colours[i] = gradient.Evaluate(height);
         }
 
-        //update mesh
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = finalTriangles;
-        mesh.colors = colours;
-
-        mesh.RecalculateNormals();
+        UpdateMesh();
     }
 }

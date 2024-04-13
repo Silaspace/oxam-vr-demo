@@ -6,18 +6,12 @@ using UnityEngine;
 
 public class orderbooksScript : MonoBehaviour
 {
-    //define public vars to be changed in inspector
-    public GameObject pointPrefab; //TODO define a point
-    public float scale;
-    public Material pointMaterial;
-
     private float dateTimeToFloat(DateTime dt)
     {
         return (float)0.2*(dt.Minute + (1/60)*dt.Second); //fix
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void ReadOrderbook()
     {
         // Read the contents of the CSV files as individual lines
         //TODO figure out relative file locations in c#
@@ -30,28 +24,28 @@ public class orderbooksScript : MonoBehaviour
 
         // Get each entry from csv. Placed in a list for now, maybe unnecessary
         // Also maintain a dict for prices
+        //TODO change to accept input from CSVReader
         for (int i = 1; i < csvLines.Length; i++)
         {
             string[] rowData = csvLines[i].Split(',');
 
+            //TODO change the indices being used here when Diane has cleaned data up
+            //AskPrice, BidPrice, AskSize, BidSize, AskTime, BidTime
             //Create entry for list (maybe not used)
             var entry = new Entry
             {
-                Quote = rowData[0],
-                Symbol = rowData[1],
-                EventTime = DateTime.ParseExact(rowData[2].Substring(0,19), "yyyyMMdd-HHmmss.fff", null),
                 BidTime = DateTime.ParseExact(rowData[3].Substring(0,15), "yyyyMMdd-HHmmss", null),
-                BidCode = Convert.ToChar(rowData[4]),
                 BidPrice = Convert.ToSingle(rowData[5]),
                 BidSize = Convert.ToInt16(rowData[6]),
                 AskTime = DateTime.ParseExact(rowData[7].Substring(0,15), "yyyyMMdd-HHmmss", null),
-                AskCode = Convert.ToChar(rowData[8]),
                 AskPrice = Convert.ToSingle(rowData[9]),
                 AskSize = Convert.ToInt16(rowData[10])
             };
             entries.Add(entry);
 
+            //TODO maybe find another method for this due to float equality check
             //add point to dict
+            //dict is used to calculate total size of bids at same time and same price
             if (points.ContainsKey((entry.BidPrice, entry.BidTime))){
                 points[(entry.BidPrice, entry.BidTime)] += 1;
             } else {
@@ -62,41 +56,23 @@ public class orderbooksScript : MonoBehaviour
 
         }
 
+        Vector3[] positions = new Vector3[csvLines.Length * 2]; //TODO maybe change length of this array
+
         //get a list of points to plot
         //for now we have:
-        //x-axis: price of buy orders
-        //y-axis: time
-        //z-axis: number of buy orders
-        //var positions = new List<Vector3>();
+        //x-axis: price
+        //y-axis: size
+        //z-axis: time
+        int j = 0;
         foreach(KeyValuePair<(float, DateTime), int> point in points)
         {
             float xPos = point.Key.Item1 - minBidPrice;
             float yPos = dateTimeToFloat(point.Key.Item2);
             int zPos = point.Value;
 
-            var p = Instantiate(pointPrefab, transform);
-            p.transform.localPosition = new Vector3(xPos, yPos, zPos);
-            p.GetComponent<MeshRenderer>().material = pointMaterial;
-            //positions.Add(new Vector3(xPos, yPos, zPos));
+            positions[j] = new Vector3(xPos, yPos, zPos);
+            j++;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
 
@@ -104,15 +80,10 @@ public class orderbooksScript : MonoBehaviour
 // Could be improved for other orderbooks data
 public class Entry
 {
-    public string Quote {get; set;}
-    public string Symbol {get; set;}
-    public DateTime EventTime {get; set;}
     public DateTime BidTime {get; set;}
-    public char BidCode {get; set;}
     public float BidPrice {get; set;}
     public int BidSize {get; set;}
     public DateTime AskTime	{get; set;}
-    public char AskCode	{get; set;}
     public float AskPrice {get; set;}
     public int AskSize {get; set;}
 }
