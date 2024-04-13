@@ -16,7 +16,14 @@ public class MeshGenerator : MonoBehaviour
     Color[] colours;
 
     public int xSize = 20;
+    public int ySize = 10;
     public int zSize = 20;
+
+    // Try with "Data/RadcliffeTemperature/temp" or "Data/RoyalMailSharePrice/price"
+    public string dataset = "Data/RoyalMailSharePrice/price";
+
+    // Use every `takeEvery` value in the dataset, e.g. if 1 uses every value, if 10 uses every 10th value
+    public int takeEvery = 10;
 
     public Gradient gradient;
 
@@ -32,25 +39,7 @@ public class MeshGenerator : MonoBehaviour
         yMax = Int32.MinValue;
         yMin = Int32.MaxValue;
 
-        // List<Vector3> vertexData = GetSharePriceData.fetch("Data/RoyalMailSharePrice/price_processed");
-        List<Vector3> vertexData = GetSharePriceData.fetch("Data/RadcliffeTemperature/temp_processed");
-        vertices = new Vector3[vertexData.Count];
-
-        for (int i = 0; i < vertexData.Count; i++){
-            // Data is TimeShort, TimeLong, Temp
-
-            // Hence points are being plotted as
-            // x: TimeShort (i.e. a one year span)
-            // y: Price
-            // z: TimeLong (i.e. each year)
-
-            vertices[i] = new Vector3(vertexData[i][0], vertexData[i][2], vertexData[i][1]);
-
-            yMax = Math.Max(yMax, vertexData[i][2]);
-            yMin = Math.Min(yMin, vertexData[i][2]);
-        }
-
-        Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
+        LoadData(dataset);
 
         //make mesh
         mesh = new Mesh();
@@ -188,11 +177,36 @@ public class MeshGenerator : MonoBehaviour
 
         for (int i = 0; i < vertices.Length; i++)
         {
-            Debug.Log("MeshGenerator.cs :: Vertex height: " + vertices[i].y);
             float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
             colours[i] = gradient.Evaluate(height);
         }
 
         UpdateMesh();
+    }
+
+    void LoadData(string inputfile) {
+        float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
+
+        (List<Vector3> vertexData, float timeShortMin, float timeShortMax, float timeLongMin, float timeLongMax, float priceMin, float priceMax) 
+            = GetSharePriceData.fetch(inputfile, repeatPeriod, takeEvery);
+        
+        vertices = new Vector3[vertexData.Count];
+
+        for (int i = 0; i < vertexData.Count; i++){
+            // vertexData is (TimeShort, TimeLong, Price)
+            // But need to plot points as
+            // x: TimeShort (i.e. a one year span)
+            // y: Price
+            // z: TimeLong (i.e. each year)
+
+            float x = GetSharePriceData.MapRange(vertexData[i][0], timeShortMin, timeShortMax, 0, xSize);
+            float y = GetSharePriceData.MapRange(vertexData[i][2], priceMin, priceMax, 0, ySize);
+            float z = GetSharePriceData.MapRange(vertexData[i][1], timeLongMin, timeLongMax, 0, zSize);
+
+            vertices[i] = new Vector3(x, y, z);
+
+            yMax = Math.Max(yMax, y);
+            yMin = Math.Min(yMin, y);
+        }
     }
 }

@@ -80,3 +80,6 @@ Assets/Data/AmazonOrderbook/data
 Assets/Data/MusicGenrePCA/data
 Assets/Data/RoyalMailSharePrice/data
 Misc/music-genre-pca/*.csv
+
+.ipynb_checkpoints
+.DS_Store
