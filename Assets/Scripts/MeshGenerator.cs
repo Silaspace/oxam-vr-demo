@@ -29,6 +29,29 @@ public class MeshGenerator : MonoBehaviour
 
     void Start()
     {
+        yMax = Int32.MinValue;
+        yMin = Int32.MaxValue;
+
+        // List<Vector3> vertexData = GetSharePriceData.fetch("Data/RoyalMailSharePrice/price_processed");
+        List<Vector3> vertexData = GetSharePriceData.fetch("Data/RadcliffeTemperature/temp_processed");
+        vertices = new Vector3[vertexData.Count];
+
+        for (int i = 0; i < vertexData.Count; i++){
+            // Data is TimeShort, TimeLong, Temp
+
+            // Hence points are being plotted as
+            // x: TimeShort (i.e. a one year span)
+            // y: Price
+            // z: TimeLong (i.e. each year)
+
+            vertices[i] = new Vector3(vertexData[i][0], vertexData[i][2], vertexData[i][1]);
+
+            yMax = Math.Max(yMax, vertexData[i][2]);
+            yMin = Math.Min(yMin, vertexData[i][2]);
+        }
+
+        Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
+
         //make mesh
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
@@ -112,20 +135,20 @@ public class MeshGenerator : MonoBehaviour
     void Triangulation()
     {
         //vertices are normally global variable, assigned here to random points for testing
-        int len = 100;
-        float yMax = Int32.MinValue;
-        float yMin = Int32.MaxValue;
-        vertices = new Vector3[len];
-        System.Random rnd = new System.Random();
-        for (int i = 0; i < len; i++){
-            float x = (float)rnd.NextDouble()*20;
-            float z = (float)rnd.NextDouble()*20;
-            float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
-            vertices[i] = new Vector3(x,y,z);
+        // int len = 100;
+        // float yMax = Int32.MinValue;
+        // float yMin = Int32.MaxValue;
+        // vertices = new Vector3[len];
+        // System.Random rnd = new System.Random();
+        // for (int i = 0; i < len; i++){
+            // float x = (float)rnd.NextDouble()*20;
+            // float z = (float)rnd.NextDouble()*20;
+            // float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
+            // vertices[i] = new Vector3(x,y,z);
 
-            yMax = Math.Max(yMax, y);
-            yMin = Math.Min(yMin, y);
-        }
+            // yMax = Math.Max(yMax, y);
+            // yMin = Math.Min(yMin, y);
+        // }
     
         //turn vertices into float2s for triangulation
         float2[] points = new float2[vertices.Length];
@@ -161,8 +184,11 @@ public class MeshGenerator : MonoBehaviour
         //TODO currently doesn't work because no rendering pipeline
         colours = new Color[vertices.Length];
 
+        Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
+
         for (int i = 0; i < vertices.Length; i++)
         {
+            Debug.Log("MeshGenerator.cs :: Vertex height: " + vertices[i].y);
             float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
             colours[i] = gradient.Evaluate(height);
         }
