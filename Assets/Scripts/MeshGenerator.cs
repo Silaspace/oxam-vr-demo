@@ -20,6 +20,8 @@ public class MeshGenerator : MonoBehaviour
 
     public Gradient gradient;
 
+    public bool renderBothSides;
+
     float yMin;
     float yMax;
     float xMax;
@@ -151,11 +153,31 @@ public class MeshGenerator : MonoBehaviour
 
         //convert to correct type for output
         var outputTriangles = triangulator.Output.Triangles;
-        triangles = new int[outputTriangles.Length];
-        for (int t = 0; t < triangles.Length; t++)
+
+        //if we want to render both sides of the mesh
+        if (renderBothSides)
         {
-            triangles[t] = outputTriangles[t];
+            int triLength = outputTriangles.Length;
+            triangles = new int[triLength*2];
+            for (int t = 0; t < triLength / 3; t++)
+            {
+                triangles[t] = outputTriangles[t];
+                triangles[t+1] = outputTriangles[t+1];
+                triangles[t+2] = outputTriangles[t+2];
+                triangles[triLength+t] = outputTriangles[t+2];
+                triangles[triLength+t+1] = outputTriangles[t+1];
+                triangles[triLength+t+2] = outputTriangles[t];
+            }
+        } else 
+        {
+            triangles = new int[outputTriangles.Length];
+            for (int t = 0; t < triangles.Length; t++)
+            {
+                triangles[t] = outputTriangles[t];
+            }
         }
+
+
 
         //create colours for gradient on mesh
         //TODO currently doesn't work because no rendering pipeline
