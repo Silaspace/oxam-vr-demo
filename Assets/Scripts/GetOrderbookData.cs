@@ -9,7 +9,7 @@ public class GetOrderbookData : MonoBehaviour
 {
     private static float dateTimeToFloat(DateTime dt)
     {
-        return (float)0.2*(dt.Minute + (1/60)*dt.Second); //fix
+        return (float)0.1*dt.Minute;//We do this to the nearest minute, but possible to include any amount of time in the calculation
     }
 
     static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r"; // Define line delimiters, regular experession craziness
@@ -29,7 +29,7 @@ public class GetOrderbookData : MonoBehaviour
         // string[] csvLines = File.ReadAllLines(@"C:\Users\jimmy\OneDrive - Nexus365\Work\Group Practical\oxam-vr-demo\Assets\Resources\Data\orderbooks_appl.csv");
         var entries = new List<Entry>();
         //dictionary of (price, time) to count
-        Dictionary<(float, DateTime), int> points = new Dictionary<(float, DateTime), int>();
+        Dictionary<(float, float), int> points = new Dictionary<(float, float), int>();
 
         float minBidPrice = 10000.0F;
 
@@ -47,10 +47,10 @@ public class GetOrderbookData : MonoBehaviour
             //Create entry for list (maybe not used)
             var entry = new Entry
             {
-                BidTime = DateTime.ParseExact(rowData[3].Substring(0,15), "yyyyMMdd-HHmmss", null),
+                BidTime = dateTimeToFloat(DateTime.ParseExact(rowData[3].Substring(0,15), "yyyyMMdd-HHmmss", null)),
                 BidPrice = Convert.ToSingle(rowData[5]),
                 BidSize = Convert.ToInt16(rowData[6]),
-                AskTime = DateTime.ParseExact(rowData[7].Substring(0,15), "yyyyMMdd-HHmmss", null),
+                AskTime = dateTimeToFloat(DateTime.ParseExact(rowData[7].Substring(0,15), "yyyyMMdd-HHmmss", null)),
                 AskPrice = Convert.ToSingle(rowData[9]),
                 AskSize = Convert.ToInt16(rowData[10])
             };
@@ -86,12 +86,12 @@ public class GetOrderbookData : MonoBehaviour
         //y-axis: size
         //z-axis: time
         // int j = 0;
-        foreach(KeyValuePair<(float, DateTime), int> point in points)
+        foreach(KeyValuePair<(float, float), int> point in points)
         {
             float xPos = point.Key.Item1 - minBidPrice;
-            float yPos = dateTimeToFloat(point.Key.Item2);
-            int zPos = point.Value;
-
+            float yPos = point.Value;
+            float zPos = point.Key.Item2;
+            
             minPrice = Math.Min(minPrice, xPos);
             maxPrice = Math.Max(maxPrice, xPos);
             minSize = Math.Min(minSize, yPos);
@@ -105,7 +105,7 @@ public class GetOrderbookData : MonoBehaviour
             // j++;
         }
 
-        return (positions, minPrice, maxPrice, minSize, maxSize, minTime, maxSize);
+        return (positions, minPrice, maxPrice, minSize, maxSize, minTime, maxTime);
     }
 }
 
@@ -113,10 +113,10 @@ public class GetOrderbookData : MonoBehaviour
 // Could be improved for other orderbooks data
 public class Entry
 {
-    public DateTime BidTime {get; set;}
+    public float BidTime {get; set;}
     public float BidPrice {get; set;}
     public int BidSize {get; set;}
-    public DateTime AskTime	{get; set;}
+    public float AskTime	{get; set;}
     public float AskPrice {get; set;}
     public int AskSize {get; set;}
 }

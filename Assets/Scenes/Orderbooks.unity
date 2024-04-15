@@ -155,7 +155,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xSize: 20
+  ySize: 2
   zSize: 20
+  dataset: Data/AppleOrderbook/orderbooks_appl
+  takeEvery: 10
+  renderOrderbookData: 1
   gradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
@@ -186,6 +190,7 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  renderBothSides: 0
 --- !u!23 &999147025
 MeshRenderer:
   m_ObjectHideFlags: 0
