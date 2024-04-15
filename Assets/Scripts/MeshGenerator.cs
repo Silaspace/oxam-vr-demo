@@ -36,7 +36,7 @@ public class MeshGenerator : MonoBehaviour
         //CreateMesh();
         //UpdateMesh();
 
-        Triangulation();
+        //Triangulation();
     }
 
 
