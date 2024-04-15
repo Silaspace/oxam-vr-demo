@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class gradient : MonoBehaviour
+public class CustomGradient : MonoBehaviour
 {
     //the method GetColor(val, minVal, maxVal, colorpallete) 
     //returns a color from a lookup table for color palletes "inferno", "magma", "viridis", "plasma"

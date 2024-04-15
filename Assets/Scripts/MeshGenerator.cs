@@ -57,18 +57,6 @@ public class MeshGenerator : MonoBehaviour
         mesh.RecalculateNormals();
     }
 
-    //remove this function to remove dots from mesh
-    private void OnDrawGizmos()
-    {
-        if (vertices == null)
-            return;
-        
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            Gizmos.DrawSphere(vertices[i], .1f);
-        }
-    }
-
     void Triangulation()
     {
         //turn vertices into float2s for triangulation
@@ -122,7 +110,7 @@ public class MeshGenerator : MonoBehaviour
                 triangles[triLength + t + 1] = outputTriangles[t + 1] + vertLength;
                 triangles[triLength + t + 2] = outputTriangles[t] + vertLength;
             }
-        } else 
+        } else
         {
             triangles = outputTriangles;
         }

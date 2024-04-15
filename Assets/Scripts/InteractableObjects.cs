@@ -2,46 +2,35 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 //isTrigger should be checked on the sphere collider of dataBall,
 // and the mesh renderer unchecked
-public class InteractableObjects : MonoBehaviour
+
+public class InteractableObjects : MonoBehaviour, GraphRenderer
 {
-    // Name of the input file, no extension
-    public string inputfile;
+    public GameObject pointPrefab;
+    public GameObject pointContainer;
 
-    
-    // The prefab for the data points to be instantiated
-    public GameObject PointPrefab;
-    
-    // Object which will contain instantiated prefabs in hiearchy
-    public GameObject PointHolder;
-    
-
-    public void Start()
-    {
-        // Get vectorList to plot
-        Debug.Log("ScatterPlot.cs :: Fetch Data");
-        (var vectorList, var labels, var namesList) = GetNames.fetch(inputfile);
-        
+    public void update(List<Vector3> positions, List<string> labels)
+	{
         // Loop through Pointlist
-        Debug.Log("ScatterPlot.cs :: Plot Data");
-        for (var i = 0; i < vectorList.Count; i++)
+        Debug.Log("InteractableObjects.cs :: Plot Data");
+        for (var i = 0; i < positions.Count; i++)
         {
             // Create new game object
-            GameObject dataPoint = Instantiate(
-                    PointPrefab, 
-                    scale(vectorList[i]), 
+            GameObject newPoint = Instantiate(
+                    pointPrefab, 
+                    scale(positions[i]), 
                     Quaternion.identity);
 
-            // Assigns name to the prefab
-            dataPoint.transform.name = namesList[i];
-            // Make dataPoint child of PointHolder object 
-            dataPoint.transform.parent = PointHolder.transform;
+            // Assigns name and parent to new object
+            newPoint.transform.name = labels[i];
+            newPoint.transform.parent = pointContainer.transform;
         }
+	}
 
-    }
     private Vector3 scale(Vector3 position)
 	{
-		return (position * 25) + new Vector3(-10, 0, 0);
+		return (position * 40) + new Vector3(-10, 0, 0);
 	}
 }
