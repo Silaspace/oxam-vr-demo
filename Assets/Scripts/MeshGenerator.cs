@@ -44,13 +44,11 @@ public class MeshGenerator : MonoBehaviour
 
         LoadData(dataset);
 
-        //make mesh
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
         //CreateMesh();
         //UpdateMesh();
-
         Triangulation();
     }
 
@@ -99,11 +97,23 @@ public class MeshGenerator : MonoBehaviour
             vert++;
         }
 
+        //create colours for gradient on mesh
+        //TODO currently doesn't work because no rendering pipeline
+        colours = new Color[vertices.Length];
+
+        for (int i = 0, z = 0; z <= zSize; z++)
+        {
+            for (int x = 0; x<= xSize; x++)
+            {
+                float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
+                colours[i] = gradient.Evaluate(height);
+                i++;
+            }
+        }
     }
 
     void UpdateMesh()
     {
-        //update mesh
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
