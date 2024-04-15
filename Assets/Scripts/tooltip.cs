@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //isTrigger on the sphere collider on dataBall should be checked
-public class tooltip : MonoBehaviour
+public class Tooltip : MonoBehaviour
 {
     public string toolTipText = ""; // set this in the Inspector
 
