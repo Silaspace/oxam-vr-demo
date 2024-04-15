@@ -27,6 +27,7 @@ public class MeshGenerator : MonoBehaviour
 
     public Gradient gradient;
 
+    //beware, if both sides are rendered, we basically render the entire mesh twice
     public bool renderBothSides;
 
     float yMin;
@@ -157,13 +158,23 @@ public class MeshGenerator : MonoBehaviour
             triangles = new int[triLength*2];
             Array.Copy(outputTriangles, 0, triangles, 0, triLength); // copy original triangles
 
+            //create new vertices that are slightly below the old ones to avoid shader bug
+            int vertLength = vertices.Length;
+            Vector3[] tempVertices = vertices;
+            vertices = new Vector3[vertLength * 2];
+            Array.Copy(tempVertices, 0, vertices, 0, vertLength);
+            for (int v = 0; v < vertLength; v +=1)
+            {
+                vertices[vertLength + v] = new Vector3(vertices[v].x, vertices[v].y - 0.01f, vertices[v].z);
+            }
 
             // Add reversed triangles for the second side
             for (int t = 0; t < triLength; t += 3)
             {
-                triangles[triLength + t] = outputTriangles[t + 2]; // reverse vertex order
-                triangles[triLength + t + 1] = outputTriangles[t + 1];
-                triangles[triLength + t + 2] = outputTriangles[t];
+                // reverse vertex order, offset to be vertices on underside of mesh
+                triangles[triLength + t] = outputTriangles[t + 2] + vertLength; 
+                triangles[triLength + t + 1] = outputTriangles[t + 1] + vertLength;
+                triangles[triLength + t + 2] = outputTriangles[t] + vertLength;
             }
         } else 
         {
@@ -171,7 +182,6 @@ public class MeshGenerator : MonoBehaviour
         }
 
         //create colours for gradient on mesh
-        //TODO currently doesn't work because no rendering pipeline
         colours = new Color[vertices.Length];
 
         Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
