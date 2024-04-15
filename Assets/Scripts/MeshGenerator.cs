@@ -107,7 +107,6 @@ public class MeshGenerator : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.colors = colours;
-
         mesh.RecalculateNormals();
     }
 
@@ -125,22 +124,6 @@ public class MeshGenerator : MonoBehaviour
 
     void Triangulation()
     {
-        //vertices are normally global variable, assigned here to random points for testing
-        // int len = 100;
-        // float yMax = Int32.MinValue;
-        // float yMin = Int32.MaxValue;
-        // vertices = new Vector3[len];
-        // System.Random rnd = new System.Random();
-        // for (int i = 0; i < len; i++){
-            // float x = (float)rnd.NextDouble()*20;
-            // float z = (float)rnd.NextDouble()*20;
-            // float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
-            // vertices[i] = new Vector3(x,y,z);
-
-            // yMax = Math.Max(yMax, y);
-            // yMin = Math.Min(yMin, y);
-        // }
-    
         //turn vertices into float2s for triangulation
         float2[] points = new float2[vertices.Length];
         for (int p = 0; p < vertices.Length; p++)
@@ -163,33 +146,29 @@ public class MeshGenerator : MonoBehaviour
         };
         triangulator.Run();
 
-        //convert to correct type for output
-        var outputTriangles = triangulator.Output.Triangles;
+        NativeArray<int> nativeOutputTriangles = triangulator.Output.Triangles.AsArray();
+        int[] outputTriangles = new int[nativeOutputTriangles.Length];
+        nativeOutputTriangles.CopyTo(outputTriangles);
 
         //if we want to render both sides of the mesh
         if (renderBothSides)
         {
             int triLength = outputTriangles.Length;
             triangles = new int[triLength*2];
-            for (int t = 0; t < triLength / 3; t++)
+            Array.Copy(outputTriangles, 0, triangles, 0, triLength); // copy original triangles
+
+
+            // Add reversed triangles for the second side
+            for (int t = 0; t < triLength; t += 3)
             {
-                triangles[t] = outputTriangles[t];
-                triangles[t+1] = outputTriangles[t+1];
-                triangles[t+2] = outputTriangles[t+2];
-                triangles[triLength+t] = outputTriangles[t+2];
-                triangles[triLength+t+1] = outputTriangles[t+1];
-                triangles[triLength+t+2] = outputTriangles[t];
+                triangles[triLength + t] = outputTriangles[t + 2]; // reverse vertex order
+                triangles[triLength + t + 1] = outputTriangles[t + 1];
+                triangles[triLength + t + 2] = outputTriangles[t];
             }
         } else 
         {
-            triangles = new int[outputTriangles.Length];
-            for (int t = 0; t < triangles.Length; t++)
-            {
-                triangles[t] = outputTriangles[t];
-            }
+            triangles = outputTriangles;
         }
-
-
 
         //create colours for gradient on mesh
         //TODO currently doesn't work because no rendering pipeline
