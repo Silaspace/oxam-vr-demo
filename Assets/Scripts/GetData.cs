@@ -12,12 +12,8 @@ public class GetData : MonoBehaviour
     static int zAxis = 2;
     static int labelIndex = 3;
 
-    public static (List<Vector3>, List<string>) fetch(string inputfile)
-    {
-        // Set pointlist to results of function Reader with argument inputfile
-        Debug.Log("GetData.cs :: Read data from CSV");
-        var pointList = CSVReader.Read(inputfile);
-        
+    public static (List<Vector3>, List<string>) process(List<Dictionary<string, object>> pointList, DataType type)
+    {        
         // Choose column names for the data
         Debug.Log("GetData.cs :: Get names of columns");
         var columnList = new List<string>(pointList[1].Keys);

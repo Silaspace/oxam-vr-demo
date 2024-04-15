@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ScatterPlot : MonoBehaviour, isPlotter
+public class ScatterPlot : MonoBehaviour, GraphRenderer
 {
 
     // Particle system
@@ -42,13 +42,10 @@ public class ScatterPlot : MonoBehaviour, isPlotter
 		}
 	}
 	
-	public void plot(string inputFile)
+	public void update(List<Vector3> positions, List<string> labels)
 	{
-        // Get vectorList and labels to plot
-        Debug.Log("ScatterPlot.cs :: Fetch Data");
-        (List<Vector3> positions, List<string> labels) = GetData.fetch(inputFile);
-
-        // Assign unique colors to each label
+        // Assign label colors
+        Debug.Log("ScatterPlot.cs :: Assign label colors");
         AssignLabelColors(labels);
 
         // Particle system built
@@ -61,7 +58,6 @@ public class ScatterPlot : MonoBehaviour, isPlotter
 			cloud[i].startSize = 0.5f;
 
             if (labels != null && labels.Count > i) {
-                Debug.Log("Setting color");
                 cloud[i].startColor = labelColorMap[labels[i]];
             }
             else {
@@ -74,7 +70,7 @@ public class ScatterPlot : MonoBehaviour, isPlotter
 
 	private Vector3 scale(Vector3 position)
 	{
-		return (position * 25) + new Vector3(-10, 0, 0);
+		return (position * 40) + new Vector3(-10, 0, 0);
 	}
 
     private void AssignLabelColors(List<string> labels)
