@@ -13,9 +13,9 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
     Color[] colours;
 
-    public int xSize = 20;
-    public int ySize = 10;
-    public int zSize = 20;
+    public int xSize = 2;
+    public int ySize = 2;
+    public int zSize = 2;
 
     // Try with "Data/RadcliffeTemperature/temp" or "Data/RoyalMailSharePrice/price"
     public string dataset = "Data/RoyalMailSharePrice/price";
