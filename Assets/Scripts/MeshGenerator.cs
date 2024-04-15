@@ -14,7 +14,7 @@ public class MeshGenerator : MonoBehaviour
     Color[] colours;
 
     public int xSize = 2;
-    public int ySize = 2;
+    public int ySize = 1;
     public int zSize = 2;
 
     // Try with "Data/RadcliffeTemperature/temp" or "Data/RoyalMailSharePrice/price"
