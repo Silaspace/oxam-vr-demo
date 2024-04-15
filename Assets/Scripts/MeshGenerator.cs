@@ -15,10 +15,20 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
     Color[] colours;
 
-    public int xSize = 2;
-    public int zSize = 2;
+    public int xSize = 20;
+    public int ySize = 10;
+    public int zSize = 20;
+
+    // Try with "Data/RadcliffeTemperature/temp" or "Data/RoyalMailSharePrice/price"
+    public string dataset = "Data/RoyalMailSharePrice/price";
+
+    // Use every `takeEvery` value in the dataset, e.g. if 1 uses every value, if 10 uses every 10th value
+    public int takeEvery = 10;
 
     public Gradient gradient;
+
+    //beware, if both sides are rendered, we basically render the entire mesh twice
+    public bool renderBothSides;
 
     float yMin;
     float yMax;
@@ -29,17 +39,20 @@ public class MeshGenerator : MonoBehaviour
 
     void Start()
     {
-        //make mesh
+        yMax = Int32.MinValue;
+        yMin = Int32.MaxValue;
+
+        LoadData(dataset);
+
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
         //CreateMesh();
         //UpdateMesh();
-
-        //Triangulation();
+        Triangulation();
     }
 
-
+    //old code for even meshes
     void CreateMesh()
     {
         vertices = new Vector3[(xSize+1) * (zSize+1)];
@@ -104,8 +117,7 @@ public class MeshGenerator : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        //mesh.colors = colours;
-
+        mesh.colors = colours;
         mesh.RecalculateNormals();
     }
 
@@ -123,17 +135,6 @@ public class MeshGenerator : MonoBehaviour
 
     void Triangulation()
     {
-        //vertices are normally global variable, assigned here to random points for testing
-        int len = 100;
-        vertices = new Vector3[len];
-        System.Random rnd = new System.Random();
-        for (int i = 0; i < len; i++){
-            float x = (float)rnd.NextDouble()*2;
-            float z = (float)rnd.NextDouble()*2;
-            float y = Mathf.PerlinNoise(x * .3f, z * .3f); //change this to be heights
-            vertices[i] = new Vector3(x,y,z);
-        }
-    
         //turn vertices into float2s for triangulation
         float2[] points = new float2[vertices.Length];
         for (int p = 0; p < vertices.Length; p++)
@@ -156,19 +157,77 @@ public class MeshGenerator : MonoBehaviour
         };
         triangulator.Run();
 
-        //convert to correct type for output
-        var outputTriangles = triangulator.Output.Triangles;
-        int[] finalTriangles = new int[outputTriangles.Length];
-        for (int t = 0; t<finalTriangles.Length; t++)
+        NativeArray<int> nativeOutputTriangles = triangulator.Output.Triangles.AsArray();
+        int[] outputTriangles = new int[nativeOutputTriangles.Length];
+        nativeOutputTriangles.CopyTo(outputTriangles);
+
+        //if we want to render both sides of the mesh
+        if (renderBothSides)
         {
-            finalTriangles[t] = outputTriangles[t];
+            int triLength = outputTriangles.Length;
+            triangles = new int[triLength*2];
+            Array.Copy(outputTriangles, 0, triangles, 0, triLength); // copy original triangles
+
+            //create new vertices that are slightly below the old ones to avoid shader bug
+            int vertLength = vertices.Length;
+            Vector3[] tempVertices = vertices;
+            vertices = new Vector3[vertLength * 2];
+            Array.Copy(tempVertices, 0, vertices, 0, vertLength);
+            for (int v = 0; v < vertLength; v +=1)
+            {
+                vertices[vertLength + v] = new Vector3(vertices[v].x, vertices[v].y - 0.01f, vertices[v].z);
+            }
+
+            // Add reversed triangles for the second side
+            for (int t = 0; t < triLength; t += 3)
+            {
+                // reverse vertex order, offset to be vertices on underside of mesh
+                triangles[triLength + t] = outputTriangles[t + 2] + vertLength; 
+                triangles[triLength + t + 1] = outputTriangles[t + 1] + vertLength;
+                triangles[triLength + t + 2] = outputTriangles[t] + vertLength;
+            }
+        } else 
+        {
+            triangles = outputTriangles;
         }
 
-        //update mesh
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = finalTriangles;
+        //create colours for gradient on mesh
+        colours = new Color[vertices.Length];
 
-        mesh.RecalculateNormals();
+        Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
+            colours[i] = gradient.Evaluate(height);
+        }
+
+        UpdateMesh();
+    }
+
+    void LoadData(string inputfile) {
+        float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
+
+        (List<Vector3> vertexData, float timeShortMin, float timeShortMax, float timeLongMin, float timeLongMax, float priceMin, float priceMax) 
+            = GetSharePriceData.fetch(inputfile, repeatPeriod, takeEvery);
+        
+        vertices = new Vector3[vertexData.Count];
+
+        for (int i = 0; i < vertexData.Count; i++){
+            // vertexData is (TimeShort, TimeLong, Price)
+            // But need to plot points as
+            // x: TimeShort (i.e. a one year span)
+            // y: Price
+            // z: TimeLong (i.e. each year)
+
+            float x = GetSharePriceData.MapRange(vertexData[i][0], timeShortMin, timeShortMax, 0, xSize);
+            float y = GetSharePriceData.MapRange(vertexData[i][2], priceMin, priceMax, 0, ySize);
+            float z = GetSharePriceData.MapRange(vertexData[i][1], timeLongMin, timeLongMax, 0, zSize);
+
+            vertices[i] = new Vector3(x, y, z);
+
+            yMax = Math.Max(yMax, y);
+            yMin = Math.Min(yMin, y);
+        }
     }
 }
