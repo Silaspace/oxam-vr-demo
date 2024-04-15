@@ -8,8 +8,6 @@ using Unity.Mathematics;
 public class MeshGenerator : MonoBehaviour
 {
 
-    // code from Brackeys video https://www.youtube.com/watch?v=64NblGkAabk&ab_channel=Brackeys
-
     Mesh mesh;
     Vector3[] vertices;
     int[] triangles;
@@ -47,69 +45,7 @@ public class MeshGenerator : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
 
-        //CreateMesh();
-        //UpdateMesh();
         Triangulation();
-    }
-
-    //old code for even meshes
-    void CreateMesh()
-    {
-        vertices = new Vector3[(xSize+1) * (zSize+1)];
-
-        for (int i = 0, z = 0; z <= zSize; z++)
-        {
-            for (int x = 0; x <= xSize; x++)
-            {
-                float y = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f; //change this to be heights
-                vertices[i] = new Vector3(x, y, z);
-
-                xMax = Math.Max(xMax, x);
-                xMin = Math.Min(xMin, x);
-                yMax = Math.Max(yMax, y);
-                yMin = Math.Min(yMin, y);
-                zMax = Math.Max(zMax, z);
-                zMin = Math.Min(zMin, y);
-
-                i++;
-            }
-        }
-
-        triangles = new int[xSize * zSize * 6];
-        // must make points in clockwise order
-
-        int vert = 0;
-        int tris = 0;
-        for (int z = 0; z < zSize; z++)
-        {
-            for (int x = 0; x < xSize; x++)
-            {
-                triangles[tris + 0] = vert;
-                triangles[tris + 1] = vert + xSize + 1;
-                triangles[tris + 2] = vert + 1;
-                triangles[tris + 3] = vert + 1;
-                triangles[tris + 4] = vert + xSize + 1;
-                triangles[tris + 5] = vert + xSize + 2;
-
-                vert++;
-                tris +=6;
-            }
-            vert++;
-        }
-
-        //create colours for gradient on mesh
-        //TODO currently doesn't work because no rendering pipeline
-        colours = new Color[vertices.Length];
-
-        for (int i = 0, z = 0; z <= zSize; z++)
-        {
-            for (int x = 0; x<= xSize; x++)
-            {
-                float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
-                colours[i] = gradient.Evaluate(height);
-                i++;
-            }
-        }
     }
 
     void UpdateMesh()
