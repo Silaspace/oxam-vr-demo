@@ -3,19 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
-public class orderbooksScript : MonoBehaviour
+public class GetOrderbookData : MonoBehaviour
 {
-    private float dateTimeToFloat(DateTime dt)
+    private static float dateTimeToFloat(DateTime dt)
     {
         return (float)0.2*(dt.Minute + (1/60)*dt.Second); //fix
     }
 
-    void ReadOrderbook()
+    static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r"; // Define line delimiters, regular experession craziness
+
+    public static (List<Vector3>, float, float, float, float, float, float) ReadOrderbook()
     {
+        var list = new List<Dictionary<string, object>>(); //declare dictionary list
+
+        TextAsset data = Resources.Load("Data/AppleOrderbook/orderbooks_appl") as TextAsset; //Loads the TextAsset named in the file argument of the function
+
+        Debug.Log("GetOrderbookData.cs :: Data loaded:" + data.text); // Print raw data, make sure parsed correctly
+
+        string[] csvLines = Regex.Split(data.text, LINE_SPLIT_RE); // Split data.text into lines using LINE_SPLIT_RE characters
+
         // Read the contents of the CSV files as individual lines
         //TODO figure out relative file locations in c#
-        string[] csvLines = File.ReadAllLines(@"C:\Users\jimmy\OneDrive - Nexus365\Work\Group Practical\oxam-vr-demo\Assets\Resources\Data\orderbooks_appl.csv");
+        // string[] csvLines = File.ReadAllLines(@"C:\Users\jimmy\OneDrive - Nexus365\Work\Group Practical\oxam-vr-demo\Assets\Resources\Data\orderbooks_appl.csv");
         var entries = new List<Entry>();
         //dictionary of (price, time) to count
         Dictionary<(float, DateTime), int> points = new Dictionary<(float, DateTime), int>();
@@ -28,6 +39,8 @@ public class orderbooksScript : MonoBehaviour
         for (int i = 1; i < csvLines.Length; i++)
         {
             string[] rowData = csvLines[i].Split(',');
+
+            // Debug.Log(rowData[3]);
 
             //TODO change the indices being used here when Diane has cleaned data up
             //AskPrice, BidPrice, AskSize, BidSize, AskTime, BidTime
@@ -56,23 +69,43 @@ public class orderbooksScript : MonoBehaviour
 
         }
 
-        Vector3[] positions = new Vector3[csvLines.Length * 2]; //TODO maybe change length of this array
+        List<Vector3> positions = new List<Vector3>();
+
+        // new List<Vector3>(csvLines.Length * 2); //TODO maybe change length of this array
+
+        float minPrice = float.MaxValue;
+        float maxPrice = float.MinValue;
+        float minSize = float.MaxValue;
+        float maxSize = float.MinValue;
+        float minTime = float.MaxValue;
+        float maxTime = float.MinValue;
 
         //get a list of points to plot
         //for now we have:
         //x-axis: price
         //y-axis: size
         //z-axis: time
-        int j = 0;
+        // int j = 0;
         foreach(KeyValuePair<(float, DateTime), int> point in points)
         {
             float xPos = point.Key.Item1 - minBidPrice;
             float yPos = dateTimeToFloat(point.Key.Item2);
             int zPos = point.Value;
 
-            positions[j] = new Vector3(xPos, yPos, zPos);
-            j++;
+            minPrice = Math.Min(minPrice, xPos);
+            maxPrice = Math.Max(maxPrice, xPos);
+            minSize = Math.Min(minSize, yPos);
+            maxSize = Math.Max(maxSize, yPos);
+            minTime = Math.Min(minTime, zPos);
+            maxTime = Math.Max(maxTime, zPos);
+
+            positions.Add(new Vector3(xPos, yPos, zPos));
+
+            // positions[j] = new Vector3(xPos, yPos, zPos);
+            // j++;
         }
+
+        return (positions, minPrice, maxPrice, minSize, maxSize, minTime, maxSize);
     }
 }
 

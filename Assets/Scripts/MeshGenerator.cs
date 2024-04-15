@@ -23,6 +23,10 @@ public class MeshGenerator : MonoBehaviour
     // Use every `takeEvery` value in the dataset, e.g. if 1 uses every value, if 10 uses every 10th value
     public int takeEvery = 10;
 
+    // Toggle to instead render Apple order books data
+    // TODO: the option to pick a different visualisation with the mesh should probably be somewhere else but this works for now
+    public bool renderOrderbookData = false;
+
     public Gradient gradient;
 
     //beware, if both sides are rendered, we basically render the entire mesh twice
@@ -142,28 +146,49 @@ public class MeshGenerator : MonoBehaviour
     }
 
     void LoadData(string inputfile) {
-        float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
 
-        (List<Vector3> vertexData, float timeShortMin, float timeShortMax, float timeLongMin, float timeLongMax, float priceMin, float priceMax) 
-            = GetSharePriceData.fetch(inputfile, repeatPeriod, takeEvery);
-        
-        vertices = new Vector3[vertexData.Count];
+        if (!renderOrderbookData)
+        {
+            float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
 
-        for (int i = 0; i < vertexData.Count; i++){
-            // vertexData is (TimeShort, TimeLong, Price)
-            // But need to plot points as
-            // x: TimeShort (i.e. a one year span)
-            // y: Price
-            // z: TimeLong (i.e. each year)
+            (List<Vector3> vertexData, float timeShortMin, float timeShortMax, float timeLongMin, float timeLongMax, float priceMin, float priceMax) 
+                = GetSharePriceData.fetch(inputfile, repeatPeriod, takeEvery);
+            
+            vertices = new Vector3[vertexData.Count];
 
-            float x = GetSharePriceData.MapRange(vertexData[i][0], timeShortMin, timeShortMax, 0, xSize);
-            float y = GetSharePriceData.MapRange(vertexData[i][2], priceMin, priceMax, 0, ySize);
-            float z = GetSharePriceData.MapRange(vertexData[i][1], timeLongMin, timeLongMax, 0, zSize);
+            for (int i = 0; i < vertexData.Count; i++){
+                // vertexData is (TimeShort, TimeLong, Price)
+                // But need to plot points as
+                // x: TimeShort (i.e. a one year span)
+                // y: Price
+                // z: TimeLong (i.e. each year)
 
-            vertices[i] = new Vector3(x, y, z);
+                float x = GetSharePriceData.MapRange(vertexData[i][0], timeShortMin, timeShortMax, 0, xSize);
+                float y = GetSharePriceData.MapRange(vertexData[i][2], priceMin, priceMax, 0, ySize);
+                float z = GetSharePriceData.MapRange(vertexData[i][1], timeLongMin, timeLongMax, 0, zSize);
 
-            yMax = Math.Max(yMax, y);
-            yMin = Math.Min(yMin, y);
+                vertices[i] = new Vector3(x, y, z);
+
+                yMax = Math.Max(yMax, y);
+                yMin = Math.Min(yMin, y);
+            }
+        } else {
+
+            (List<Vector3> vertexData, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) 
+                = GetOrderbookData.ReadOrderbook();
+            
+            vertices = new Vector3[vertexData.Count];
+
+            for (int i = 0; i < vertexData.Count; i++){
+                float x = GetSharePriceData.MapRange(vertexData[i][0], xMin, xMax, 0, xSize);
+                float y = GetSharePriceData.MapRange(vertexData[i][1], yMin, yMax, 0, ySize);
+                float z = GetSharePriceData.MapRange(vertexData[i][2], zMin, zMax, 0, zSize);
+
+                vertices[i] = new Vector3(x, y, z);
+
+                yMax = Math.Max(yMax, y);
+                yMin = Math.Min(yMin, y);
+            } 
         }
     }
 }
