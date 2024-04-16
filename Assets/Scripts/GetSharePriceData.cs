@@ -41,7 +41,7 @@ public class GetSharePriceData : MonoBehaviour
         return vectorList;
     }
 
-    // fetch fetches data from the mesh in CSVs with columns
+    // process readies data from the mesh in CSVs with columns
     //   Date Price
     // where:
     //   Date is a string in YYYY-MM-DD format
@@ -60,11 +60,17 @@ public class GetSharePriceData : MonoBehaviour
     //   timeShort is the repeating time window (e.g. how far through a particular year we are), as the number of seconds through current period
     //   timeLong is the longer time window (e.g. what particular year it is), as a unix timestamp
     //   price is the value that should be the height of the mesha
-    public static (List<Vector3>, float, float, float, float, float, float) fetch(string inputfile, float repeatPeriod, int takeEvery)
+    public static List<Vector3> process(List<Dictionary<string, object>> pointList)
     {
-        var pointList = CSVReader.Read(inputfile);
-        var columnList = new List<string>(pointList[1].Keys);
+        //Proposed Parameters
+        float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
+        int takeEvery = 10; // Use every nth value in the dataset
+        float xSize = 2f;
+        float ySize = 0.5f;
+        float zSize = 2f;
 
+        //Get column data
+        var columnList = new List<string>(pointList[1].Keys);
         var dateAxisKey = columnList[0];
         var priceAxisKey = columnList[1];
 
@@ -111,17 +117,16 @@ public class GetSharePriceData : MonoBehaviour
             float periodEnd = startTimestamp + (periodIndex + 1) * repeatPeriod;
 
             float timeShort = MapRange(currentTimestamp, periodStart, periodEnd, 0, repeatPeriod);
+
+            // Map to x,y.z
+            float x = MapRange(timeShort, 0, repeatPeriod, 0, xSize);
+            float y = MapRange(price, minPrice, maxPrice, 0, ySize);
+            float z = MapRange(periodStart, startTimestamp, endTimestamp, 0, zSize);
             
-            processedPoints.Add(
-                new Vector3(
-                    timeShort,
-                    periodStart,
-                    price
-                )
-            );
+            processedPoints.Add(new Vector3(x, y, z));
         }
 
-        return (processedPoints, 0, repeatPeriod, startTimestamp, endTimestamp, minPrice, maxPrice);
+        return processedPoints;
     }
 
     public static float MapRange(float value, float leftMin, float leftMax, float rightMin, float rightMax)
