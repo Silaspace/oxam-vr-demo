@@ -8,7 +8,7 @@ using Unity.Mathematics;
 public class MeshGenerator : MonoBehaviour, GraphRenderer
 {
     // Public properties
-    public Gradient gradient;
+   // public Gradient gradient;
 
     // Private properties
     private Mesh mesh;
@@ -99,8 +99,9 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
 
         for (int i = 0; i < vertices.Length; i++)
         {
-            float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
-            colours[i] = gradient.Evaluate(height);
+           /* float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
+            colours[i] = gradient.Evaluate(height);*/
+	    colours[i] = CustomGradient.GetColor(vertices[i].y, yMin, yMax, "magma");
         }
     }
     
