@@ -54,7 +54,7 @@ public class ScatterPlot : MonoBehaviour, GraphRenderer
 		
 		for (int i = 0; i < positions.Count; ++i)
 		{
-			cloud[i].position = scale(positions[i]);			
+			cloud[i].position = positions[i];			
 			cloud[i].startSize = 0.5f;
 
             if (labels != null && labels.Count > i) {
@@ -66,11 +66,6 @@ public class ScatterPlot : MonoBehaviour, GraphRenderer
 		}
 
 		pointsUpdated = true;
-	}
-
-	private Vector3 scale(Vector3 position)
-	{
-		return (position * 40) + new Vector3(-10, 0, 0);
 	}
 
     private void AssignLabelColors(List<string> labels)

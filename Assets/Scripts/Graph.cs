@@ -22,6 +22,12 @@ public interface GraphRenderer
     public void update(List<Vector3> vectorList, List<string> labelList);
 }
 
+public interface DataProcesser
+{
+    public void process(List<Dictionary<string, object>> rawData);
+    public void scale(List<Vector3> vectorList);
+}
+
 public class Graph : MonoBehaviour
 {
     // Graph properties

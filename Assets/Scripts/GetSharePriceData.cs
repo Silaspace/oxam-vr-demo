@@ -65,9 +65,9 @@ public class GetSharePriceData : MonoBehaviour
         //Proposed Parameters
         float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
         int takeEvery = 10; // Use every nth value in the dataset
-        float xSize = 2f;
+        float xSize = 1.5f;
         float ySize = 0.5f;
-        float zSize = 2f;
+        float zSize = 1.5f;
 
         //Get column data
         var columnList = new List<string>(pointList[1].Keys);
@@ -119,9 +119,9 @@ public class GetSharePriceData : MonoBehaviour
             float timeShort = MapRange(currentTimestamp, periodStart, periodEnd, 0, repeatPeriod);
 
             // Map to x,y.z
-            float x = MapRange(timeShort, 0, repeatPeriod, 0, xSize);
+            float x = MapRange(timeShort, 0, repeatPeriod, -xSize, xSize);
             float y = MapRange(price, minPrice, maxPrice, 0, ySize);
-            float z = MapRange(periodStart, startTimestamp, endTimestamp, 0, zSize);
+            float z = MapRange(periodStart, startTimestamp, endTimestamp, -zSize, zSize);
             
             processedPoints.Add(new Vector3(x, y, z));
         }

@@ -36,10 +36,10 @@ public class GetData : MonoBehaviour
         for (var i = 0; i < pointList.Count; i++)
         {   
             vectorList.Add(
-                new Vector3(
+                scale(new Vector3(
                     (Convert.ToSingle(pointList[i][xAxisKey]) - xMin) / xRange,
                     (Convert.ToSingle(pointList[i][yAxisKey]) - yMin) / yRange,
-                    (Convert.ToSingle(pointList[i][zAxisKey]) - zMin) / zRange));
+                    (Convert.ToSingle(pointList[i][zAxisKey]) - zMin) / zRange)));
         }
 
         // Check if there is a fourth column for labels
@@ -81,4 +81,9 @@ public class GetData : MonoBehaviour
  
         return (min, max - min);
     }
+
+    private static Vector3 scale(Vector3 position)
+	{
+		return (position * 40) + new Vector3(-10, 0, 0);
+	}
 }
