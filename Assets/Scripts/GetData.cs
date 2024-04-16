@@ -12,7 +12,7 @@ public class GetData : MonoBehaviour
     static int zAxis = 2;
     static int labelIndex = 3;
 
-    public static (List<Vector3>, List<string>) process(List<Dictionary<string, object>> pointList, DataType type)
+    public static (List<Vector3>, List<string>) process(List<Dictionary<string, object>> pointList)
     {        
         // Choose column names for the data
         Debug.Log("GetData.cs :: Get names of columns");
