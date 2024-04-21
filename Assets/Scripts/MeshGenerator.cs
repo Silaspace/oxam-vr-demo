@@ -74,7 +74,7 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         triangles = outputTriangles;
 
         // Render second side of the mesh
-        /*
+        
         int triLength = outputTriangles.Length;
         triangles = new int[triLength*2];
         Array.Copy(outputTriangles, 0, triangles, 0, triLength); // copy original triangles
@@ -97,7 +97,7 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
             triangles[triLength + t + 1] = outputTriangles[t + 1] + vertLength;
             triangles[triLength + t + 2] = outputTriangles[t] + vertLength;
         }
-        */
+        
 
         //create colours for gradient on mesh
         colours = new Color[vertices.Length];
