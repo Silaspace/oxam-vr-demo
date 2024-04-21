@@ -19,6 +19,9 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
     private float zMax;
     private float zMin;
 
+    ParticleSystem.Particle[] cloud;
+    bool pointsUpdated = false;
+
     public void update(List<Vector3> positions, List<string> labels)
 	{
         vertices = positions.ToArray();
@@ -29,10 +32,25 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
             var y = vertices[i].y;
             yMax = Math.Max(yMax, y);
             yMin = Math.Min(yMin, y);
-        } 
+        }
+
+        Debug.Log("Setting points...");
+
+        cloud = new ParticleSystem.Particle[positions.Count];
+
+        for (int i = 0; i < positions.Count; ++i)
+        {
+            Vector3 pos = positions[i];
+            cloud[i].position = new Vector3(pos.x, pos.y + 0.005f, pos.z);
+            cloud[i].startSize = 0.01f;
+            cloud[i].startColor = Color.white;
+        }
+
+        pointsUpdated = true;
 
         triangulation();
         updateMesh();
+        updatePoints();
 	}
 
     private void updateMesh()
@@ -42,6 +60,15 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         mesh.triangles = triangles;
         mesh.colors = colours;
         mesh.RecalculateNormals();
+    }
+
+    private void updatePoints()
+    {
+        if (pointsUpdated) {
+            Debug.Log("updating points...");
+            GetComponent<ParticleSystem>().SetParticles(cloud, cloud.Length);
+            pointsUpdated = false;
+        }       
     }
 
     private void triangulation()
