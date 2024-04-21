@@ -3356,7 +3356,9 @@ GameObject:
   - component: {fileID: 805320224}
   - component: {fileID: 805320223}
   - component: {fileID: 805320222}
+  - component: {fileID: 805320227}
   - component: {fileID: 805320225}
+  - component: {fileID: 805320226}
   m_Layer: 0
   m_Name: Mesh Generator
   m_TagString: Untagged
