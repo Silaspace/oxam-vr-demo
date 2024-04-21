@@ -46,7 +46,7 @@ public class Graph : MonoBehaviour
     private bool graphUpdated;
 
 
-    void Update () 
+    void Update() 
 	{
 		if (graphUpdated)
 		{
@@ -55,7 +55,8 @@ public class Graph : MonoBehaviour
 		}
 	}
 
-    public void onPress(){
+    void Start()
+    {
         Debug.Log("Graph.cs :: Pressed");
 
         getData();
