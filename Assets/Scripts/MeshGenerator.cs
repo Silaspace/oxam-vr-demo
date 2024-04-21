@@ -7,9 +7,6 @@ using Unity.Collections;
 using Unity.Mathematics;
 public class MeshGenerator : MonoBehaviour, GraphRenderer
 {
-    // Public properties
-   // public Gradient gradient;
-
     // Private properties
     private Mesh mesh;
     private Vector3[] vertices;
@@ -71,25 +68,35 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         };
         triangulator.Run();
 
-        NativeArray<int> nativeOutputTriangles = triangulator.Output.Triangles.AsArray();
-        int[] outputTriangles = new int[nativeOutputTriangles.Length];
-        nativeOutputTriangles.CopyTo(outputTriangles);
-        triangles = outputTriangles;
+        // Render the mesh
 
-        // Render second side of the mesh
-        /*
-        int triLength = outputTriangles.Length;
-        triangles = new int[triLength*2];
-        Array.Copy(outputTriangles, 0, triangles, 0, triLength); // copy original triangles
+        NativeArray<int> nativeOutputTriangles = triangulator.Output.Triangles.AsArray(); //create the mesh
+        int triLength = nativeOutputTriangles.Length;
+        int[] outputTriangles = new int[triLength]; //correct type of array for triangles
+        nativeOutputTriangles.CopyTo(outputTriangles); //get the correct type for the triangles
+
+        triangles = new int[triLength*2]; //this is used to render the mesh
+        Array.Copy(outputTriangles, 0, triangles, 0, triLength); // copy original triangles to front of final array
 
         //create new vertices that are slightly below the old ones to avoid shader bug
         int vertLength = vertices.Length;
         Vector3[] tempVertices = vertices;
         vertices = new Vector3[vertLength * 2];
         Array.Copy(tempVertices, 0, vertices, 0, vertLength);
+
+        //also, add the colours to each vertex at the same time
+        //create colours for gradient on mesh
+        colours = new Color[vertLength*2];
+
+        Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
+
         for (int v = 0; v < vertLength; v +=1)
         {
-            vertices[vertLength + v] = new Vector3(vertices[v].x, vertices[v].y - 0.0001f, vertices[v].z);
+            //create new vertex
+            vertices[vertLength + v] = new Vector3(vertices[v].x, vertices[v].y - 0.01f, vertices[v].z);
+            //assign colours to both vertices
+            colours[v] = CustomGradient.GetColor(vertices[v].y, yMin, yMax, "magma");
+            colours[vertLength + v] = colours[v];
         }
 
         // Add reversed triangles for the second side
@@ -100,39 +107,5 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
             triangles[triLength + t + 1] = outputTriangles[t + 1] + vertLength;
             triangles[triLength + t + 2] = outputTriangles[t] + vertLength;
         }
-        */
-
-        //create colours for gradient on mesh
-        colours = new Color[vertices.Length];
-
-        Debug.Log("MeshGenerator.cs :: yMax: " + yMax + ", yMin: " + yMin);
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-           /* float height = Mathf.InverseLerp(yMin, yMax, vertices[i].y);
-            colours[i] = gradient.Evaluate(height);*/
-	        colours[i] = CustomGradient.GetColor(vertices[i].y, yMin, yMax, "magma");
-        }
     }
-    
-    /*
-    void loadData(string inputfile) {
-
-        (List<Vector3> vertexData, float xMin, float xMax, float yMin, float yMax, float zMin, float zMax) 
-            = GetOrderbookData.ReadOrderbook();
-        
-        vertices = new Vector3[vertexData.Count];
-
-        for (int i = 0; i < vertexData.Count; i++){
-            float x = GetSharePriceData.MapRange(vertexData[i][0], xMin, xMax, 0, xSize);
-            float y = GetSharePriceData.MapRange(vertexData[i][1], yMin, yMax, 0, ySize);
-            float z = GetSharePriceData.MapRange(vertexData[i][2], zMin, zMax, 0, zSize);
-
-            vertices[i] = new Vector3(x, y, z);
-
-            yMax = Math.Max(yMax, y);
-            yMin = Math.Min(yMin, y);
-        } 
-    }
-    */
 }

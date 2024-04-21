@@ -25,8 +25,6 @@ public class GetOrderbookData : MonoBehaviour
         string[] csvLines = Regex.Split(data.text, LINE_SPLIT_RE); // Split data.text into lines using LINE_SPLIT_RE characters
 
         // Read the contents of the CSV files as individual lines
-        //TODO figure out relative file locations in c#
-        // string[] csvLines = File.ReadAllLines(@"C:\Users\jimmy\OneDrive - Nexus365\Work\Group Practical\oxam-vr-demo\Assets\Resources\Data\orderbooks_appl.csv");
         var entries = new List<Entry>();
         //dictionary of (price, time) to count
         Dictionary<(float, float), int> points = new Dictionary<(float, float), int>();
@@ -35,7 +33,6 @@ public class GetOrderbookData : MonoBehaviour
 
         // Get each entry from csv. Placed in a list for now, maybe unnecessary
         // Also maintain a dict for prices
-        //TODO change to accept input from CSVReader
         for (int i = 1; i < csvLines.Length; i++)
         {
             string[] rowData = csvLines[i].Split(',');
@@ -100,17 +97,13 @@ public class GetOrderbookData : MonoBehaviour
             maxTime = Math.Max(maxTime, zPos);
 
             positions.Add(new Vector3(xPos, yPos, zPos));
-
-            // positions[j] = new Vector3(xPos, yPos, zPos);
-            // j++;
         }
 
         return (positions, minPrice, maxPrice, minSize, maxSize, minTime, maxTime);
     }
 }
 
-// All of the data stored in the csv file orderbooks_appl.
-// Could be improved for other orderbooks data
+// All data required for an orderbooks file
 public class Entry
 {
     public float BidTime {get; set;}
