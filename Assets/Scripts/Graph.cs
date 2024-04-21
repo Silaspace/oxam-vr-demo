@@ -55,6 +55,7 @@ public class Graph : MonoBehaviour
 		}
 	}
 
+    /*
     void Start()
     {
         Debug.Log("Graph.cs :: Pressed");
@@ -66,6 +67,7 @@ public class Graph : MonoBehaviour
         graphUpdated = true;
 
     }
+    */
 
     public void updateFile(string newFilename)
     {
