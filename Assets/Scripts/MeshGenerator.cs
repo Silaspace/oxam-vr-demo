@@ -22,8 +22,11 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
     ParticleSystem.Particle[] cloud;
     bool pointsUpdated = false;
 
-    public void update(List<Vector3> positions, List<string> labels)
+    public void update(Graph graphData)
 	{
+        // Get appropriate data from graph object
+		var positions = graphData.getVectorList();
+
         vertices = positions.ToArray();
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
@@ -122,7 +125,7 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
             //create new vertex
             vertices[vertLength + v] = new Vector3(vertices[v].x, vertices[v].y - 0.01f, vertices[v].z);
             //assign colours to both vertices
-            colours[v] = CustomGradient.GetColor(vertices[v].y, yMin, yMax, "magma");
+            colours[v] = CustomGradient.GetColor(vertices[v].y, yMin, yMax, GraphColor.Magma);
             colours[vertLength + v] = colours[v];
         }
 

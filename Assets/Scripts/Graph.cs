@@ -17,9 +17,18 @@ public enum GraphType
     None
 }
 
+public enum GraphColor
+{
+    Magma,
+    Inferno,
+    Plasma,
+    Viridis,
+    None
+}
+
 public interface GraphRenderer
 {
-    public void update(List<Vector3> vectorList, List<string> labelList);
+    public void update(Graph graphData);
 }
 
 public interface DataProcesser
@@ -35,6 +44,7 @@ public class Graph : MonoBehaviour
     public string filename;
     public GraphType graphtype = GraphType.None;
     public DataType datatype = DataType.None;
+    public GraphColor graphcolor = GraphColor.None;
     public int scale = 1;
     public Vector3 position = new Vector3(0, 0, 0);
 
@@ -50,7 +60,7 @@ public class Graph : MonoBehaviour
 	{
 		if (graphUpdated)
 		{
-            graphRenderer.update(vectorList, labelList);
+            graphRenderer.update(this);
             graphUpdated = false;
 		}
 	}
@@ -67,11 +77,22 @@ public class Graph : MonoBehaviour
 
     }
 
+    public List<Vector3> getVectorList()
+    {
+        return vectorList;
+    }
+
+    public List<string> getLabels()
+    {
+        return labelList;
+    }
+
     public void updateFile(string newFilename)
     {
         Debug.Log("Graph.cs :: Update filename attribute");
         filename = newFilename;
-        //get new data
+        getData();
+        processData();
         graphUpdated = true;
     }
 
@@ -87,6 +108,14 @@ public class Graph : MonoBehaviour
     {
         Debug.Log("Graph.cs :: Update datatype attribute");
         graphtype = newGraphtype;
+        chooseRenderer();
+        graphUpdated = true;
+    }
+
+    public void updateGraphColor(GraphColor newGraphColor)
+    {
+        Debug.Log("Graph.cs :: Update datatype attribute");
+        graphcolor = newGraphColor;
         graphUpdated = true;
     }
 

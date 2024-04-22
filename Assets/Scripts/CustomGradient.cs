@@ -1037,7 +1037,7 @@ public class CustomGradient : MonoBehaviour
                  {0.983868, 0.904867, 0.136897},
                  {0.993248, 0.906157, 0.143936}};
 
-    public static Color GetColorM(float val, float minVal, float maxVal)
+    private static Color GetColorM(float val, float minVal, float maxVal)
     {
         float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
         int arrayPos = (int)(grayScale*255);
@@ -1047,7 +1047,7 @@ public class CustomGradient : MonoBehaviour
         Color color = new Color32(r,g,b,255);
         return color;
     }
-    public static Color GetColorI(float val, float minVal, float maxVal)
+    private static Color GetColorI(float val, float minVal, float maxVal)
     {
         float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
         int arrayPos = (int)(grayScale*255);
@@ -1057,7 +1057,7 @@ public class CustomGradient : MonoBehaviour
         Color color = new Color32(r,g,b,255);
         return color;
     }
-    public static Color GetColorP(float val, float minVal, float maxVal)
+    private static Color GetColorP(float val, float minVal, float maxVal)
     {
         float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
         int arrayPos = (int)(grayScale*255);
@@ -1067,7 +1067,7 @@ public class CustomGradient : MonoBehaviour
         Color color = new Color32(r,g,b,255);
         return color;
     }
-    public static Color GetColorV(float val, float minVal, float maxVal)
+    private static Color GetColorV(float val, float minVal, float maxVal)
     {
         float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
         int arrayPos = (int)(grayScale*255);
@@ -1077,12 +1077,12 @@ public class CustomGradient : MonoBehaviour
         Color color = new Color32(r,g,b,255);
         return color;
     }
-    public static Color GetColor(float val, float minVal, float maxVal, string colorpallete)
+    public static Color GetColor(float val, float minVal, float maxVal, GraphColor colorpallete)
     {
-        if (colorpallete =="magma") return GetColorM(val, minVal, maxVal);
-        if (colorpallete =="inferno") return GetColorI(val, minVal, maxVal);
-        if (colorpallete =="plasma") return GetColorP(val, minVal, maxVal);
-        if (colorpallete =="viridis") return GetColorV(val, minVal, maxVal);
+        if (colorpallete == GraphColor.Magma) return GetColorM(val, minVal, maxVal);
+        if (colorpallete == GraphColor.Inferno) return GetColorI(val, minVal, maxVal);
+        if (colorpallete == GraphColor.Plasma) return GetColorP(val, minVal, maxVal);
+        if (colorpallete == GraphColor.Viridis) return GetColorV(val, minVal, maxVal);
         return GetColorV(val, minVal, maxVal);
     }
 }

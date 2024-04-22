@@ -42,8 +42,12 @@ public class ScatterPlot : MonoBehaviour, GraphRenderer
 		}
 	}
 	
-	public void update(List<Vector3> positions, List<string> labels)
+	public void update(Graph graphData)
 	{
+		// Get appropriate data from graph object
+		var labels = graphData.getLabels();
+		var positions = graphData.getVectorList();
+
         // Assign label colors
         Debug.Log("ScatterPlot.cs :: Assign label colors");
         AssignLabelColors(labels);
