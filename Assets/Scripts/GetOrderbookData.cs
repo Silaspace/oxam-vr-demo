@@ -9,7 +9,7 @@ public class GetOrderbookData : MonoBehaviour
 {
     private static float dateTimeToFloat(DateTime dt)
     {
-        return (float)0.1*dt.Minute;//We do this to the nearest minute, but possible to include any amount of time in the calculation
+        return (float)0.1*(dt.Minute + 0.01666f*dt.second);//We do this to the nearest minute, but possible to include any amount of time in the calculation
     }
 
     static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r"; // Define line delimiters, regular experession craziness
@@ -26,10 +26,16 @@ public class GetOrderbookData : MonoBehaviour
 
         // Read the contents of the CSV files as individual lines
         var entries = new List<Entry>();
-        //dictionary of (price, time) to count
-        Dictionary<(float, float), int> points = new Dictionary<(float, float), int>();
+        //dictionary of time to (price, count) for bids and asks
+        Dictionary<float, Dictionary<float, int>> bids = new Dictionary<float, Dictionary<float, int>>();
+        Dictionary<float, Dictionary<float, int>> asks = new Dictionary<float, Dictionary<float, int>>();
 
-        float minBidPrice = 10000.0F;
+        float minPrice = float.MaxValue;
+        float maxPrice = float.MinValue;
+        float minSize = float.MaxValue;
+        float maxSize = float.MinValue;
+        float minTime = float.MaxValue;
+        float maxTime = float.MinValue;
 
         // Get each entry from csv. Placed in a list for now, maybe unnecessary
         // Also maintain a dict for prices
@@ -51,15 +57,49 @@ public class GetOrderbookData : MonoBehaviour
                 AskPrice = Convert.ToSingle(rowData[9]),
                 AskSize = Convert.ToInt16(rowData[10])
             };
-            entries.Add(entry);
 
             //TODO maybe find another method for this due to float equality check
-            //add point to dict
+            //add ask and bid to each dict
             //dict is used to calculate total size of bids at same time and same price
-            if (points.ContainsKey((entry.BidPrice, entry.BidTime))){
-                points[(entry.BidPrice, entry.BidTime)] += 1;
-            } else {
-                points.Add((entry.BidPrice, entry.BidTime), 1);
+
+            //first check for existing dictionary at this time
+            if (bids.ContainsKey(entry.BidTime))
+            {
+                //then look if we have an amount for this time
+                if (bids[entry.BidTime].ContainsKey(entry.BidPrice))
+                {
+                    bids[entry.BidTime][entry.BidPrice] += entry.BidSize;
+                }
+                else //make a new dictionary for this price
+                {
+                    bids[entry.BidTime].Add(entry.BidPrice, entry.BidSize);
+                }
+            }
+            else //make a dictionary for this time
+            {
+                Dictionary<float, int> newDict = new Dictionary<float, int>();
+                newDict.Add(entry.BidPrice, entry.BidSize);
+                bids.Add(entry.BidTime, newDict);
+            }
+
+            //repeat for asks
+            if (bids.ContainsKey(entry.BidTime))
+            {
+                //then look if we have an amount for this time
+                if (bids[entry.BidTime].ContainsKey(entry.BidPrice))
+                {
+                    bids[entry.BidTime][entry.BidPrice] += entry.BidSize;
+                }
+                else //make a new dictionary for this price
+                {
+                    bids[entry.BidTime].Add(entry.BidPrice, entry.BidSize);
+                }
+            }
+            else //make a dictionary for this time
+            {
+                Dictionary<float, int> newDict = new Dictionary<float, int>();
+                newDict.Add(entry.BidPrice, entry.BidSize);
+                bids.Add(entry.BidTime, newDict);
             }
 
             minBidPrice = Math.Min(minBidPrice, entry.BidPrice);
@@ -68,21 +108,13 @@ public class GetOrderbookData : MonoBehaviour
 
         List<Vector3> positions = new List<Vector3>();
 
-        // new List<Vector3>(csvLines.Length * 2); //TODO maybe change length of this array
-
-        float minPrice = float.MaxValue;
-        float maxPrice = float.MinValue;
-        float minSize = float.MaxValue;
-        float maxSize = float.MinValue;
-        float minTime = float.MaxValue;
-        float maxTime = float.MinValue;
+        
 
         //get a list of points to plot
         //for now we have:
         //x-axis: price
         //y-axis: size
         //z-axis: time
-        // int j = 0;
         foreach(KeyValuePair<(float, float), int> point in points)
         {
             float xPos = point.Key.Item1 - minBidPrice;
@@ -109,7 +141,7 @@ public class Entry
     public float BidTime {get; set;}
     public float BidPrice {get; set;}
     public int BidSize {get; set;}
-    public float AskTime	{get; set;}
+    public float AskTime {get; set;}
     public float AskPrice {get; set;}
     public int AskSize {get; set;}
 }
