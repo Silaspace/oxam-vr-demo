@@ -23,6 +23,7 @@ public enum GraphColor
     Inferno,
     Plasma,
     Viridis,
+    Static,
     None
 }
 
@@ -53,6 +54,9 @@ public class Graph : MonoBehaviour
     private List<Dictionary<string, object>> rawData;
     private List<Vector3> vectorList;
     private List<string> labelList;
+    private List<Color> colorList;
+    private Vector3 vectorMax;
+    private Vector3 vectorMin;
     private bool graphUpdated;
 
 
@@ -71,6 +75,7 @@ public class Graph : MonoBehaviour
 
         getData();
         processData();
+        colorGraph();
         chooseRenderer();
 
         graphUpdated = true;
@@ -86,6 +91,11 @@ public class Graph : MonoBehaviour
     {
         return labelList;
     }
+    
+    public List<Color> getColors()
+    {
+        return colorList;
+    }
 
     public void updateFile(string newFilename)
     {
@@ -93,6 +103,7 @@ public class Graph : MonoBehaviour
         filename = newFilename;
         getData();
         processData();
+        colorGraph();
         graphUpdated = true;
     }
 
@@ -101,6 +112,7 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update datatype attribute");
         datatype = newDatatype;
         processData();
+        colorGraph();
         graphUpdated = true;
     }
 
@@ -116,6 +128,7 @@ public class Graph : MonoBehaviour
     {
         Debug.Log("Graph.cs :: Update datatype attribute");
         graphcolor = newGraphColor;
+        colorGraph();
         graphUpdated = true;
     }
 
@@ -128,6 +141,8 @@ public class Graph : MonoBehaviour
     private void processData()
     {
         Debug.Log("Graph.cs :: Process the rawData into a vectorList");
+
+        // Proces rawData into the vectorList
         switch(datatype) 
         {
         case DataType.Scatter:
@@ -142,6 +157,15 @@ public class Graph : MonoBehaviour
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");
             break;
+        }
+
+        // Update other properties bsed on the new vectorList
+        Debug.Log("Graph.cs :: Set vectorMax and vectorMin");
+        vectorMax = vectorList[0];
+        vectorMin = vectorMax;
+        for (int i = 1; i < vectorList.Count; i++){
+            vectorMax = Vector3.Max(vectorMax, vectorList[i]);
+            vectorMin = Vector3.Min(vectorMin, vectorList[i]);
         }
     }
 
@@ -162,6 +186,39 @@ public class Graph : MonoBehaviour
             break;
         case GraphType.None:
             Debug.Log("Graph.cs :: No Graphtype selected");
+            break;
+        }
+    }
+
+    private void colorGraph()
+    {
+        Debug.Log("Graph.cs :: Assign a color to every point in the vectorList");
+        colorList = new List<Color>();
+
+        switch(graphcolor) 
+        {
+        case GraphColor.Magma:
+        case GraphColor.Inferno:
+        case GraphColor.Plasma:
+        case GraphColor.Viridis:
+            for (int i = 0; i < vectorList.Count; i += 1)
+            {
+                colorList.Add(
+                    CustomColors.GetColor(
+                        vectorList[i].y,
+                        vectorMin.y,
+                        vectorMax.y,
+                        graphcolor));
+            }
+            break;
+        case GraphColor.Static:
+            for (int i = 0; i < vectorList.Count; i += 1)
+            {
+                colorList.Add(Color.red);
+            }
+            break;
+        case GraphColor.None:
+            Debug.Log("Graph.cs :: No color selected");
             break;
         }
     }

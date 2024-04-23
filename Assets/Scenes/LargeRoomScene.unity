@@ -28178,6 +28178,10 @@ PrefabInstance:
       propertyPath: graphtype
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
+      propertyPath: graphcolor
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7682365919006407121, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: m_text
       value: Example Scatter Plot
