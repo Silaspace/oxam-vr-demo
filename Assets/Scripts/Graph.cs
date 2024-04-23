@@ -57,6 +57,11 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
+        //onPress();
+    }
+
+    void onPress()
+    {
         Debug.Log("Graph.cs :: Pressed");
 
         getData();
