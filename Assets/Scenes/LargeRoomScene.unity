@@ -338,11 +338,11 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 46955690c3a6634408dcff8af6b80e54, type: 2}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: datatype
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: filename
-      value: Data/RoyalMailSharePrice/price
+      value: Data/AppleOrderbook/orderbooks_appl
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: graphtype
@@ -354,7 +354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: displayName
-      value: Royal Mail Share Price
+      value: Apple Orderbooks
       objectReference: {fileID: 0}
     - target: {fileID: 7682365919006407121, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: m_text
