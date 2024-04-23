@@ -108,7 +108,7 @@ public class Graph : MonoBehaviour
             vectorList = GetSharePriceData.process(rawData);
             break;
         case DataType.Orderbooks:
-            //vectorList = GetOrderbookData.process(rawData);
+            vectorList = GetOrderbookData.process(rawData);
             break;
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");

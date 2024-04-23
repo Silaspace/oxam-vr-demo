@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using System.Text.RegularExpressions;
 using System.Linq;
 
 public class GetOrderbookData : MonoBehaviour
@@ -13,46 +12,43 @@ public class GetOrderbookData : MonoBehaviour
         return (float)0.1*(dt.Minute + 0.01666f*dt.Second);//We do this to the nearest minute, but possible to include any amount of time in the calculation
     }
 
-    static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r"; // Define line delimiters, regular experession craziness
-
-    public static (List<Vector3>, float, float, float, float, float, float) ReadOrderbook()
+    public static List<Vector3> process(List<Dictionary<string, object>> pointList)
     {
-        TextAsset data = Resources.Load("Data/AppleOrderbook/orderbooks_appl") as TextAsset; //Loads the TextAsset named in the file argument of the function
-
-        Debug.Log("GetOrderbookData.cs :: Data loaded:" + data.text); // Print raw data, make sure parsed correctly
-
-        string[] csvLines = Regex.Split(data.text, LINE_SPLIT_RE); // Split data.text into lines using LINE_SPLIT_RE characters
-
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();
         SortedDictionary<float, SortedDictionary<float, int>> asks = new SortedDictionary<float, SortedDictionary<float, int>>();
 
         float minPrice = float.MaxValue;
-        float maxPrice = float.MinValue;
-        float minSize = float.MaxValue;
-        float maxSize = float.MinValue;
-        float minTime = float.MaxValue;
-        float maxTime = float.MinValue;
+        //float maxPrice = float.MinValue;
+        //float minSize = float.MaxValue;
+        //float maxSize = float.MinValue;
+        //float minTime = float.MaxValue;
+        //float maxTime = float.MinValue;
 
-        // Get each entry from csv. Placed in a list for now, maybe unnecessary
+        //TODO change the indices being used here when Diane has cleaned data up
+        //Get column data
+        var columnList = new List<string>(pointList[1].Keys);
+        var bidPriceAxisKey = columnList[5];
+        var askPriceAxisKey = columnList[9];
+        var bidTimeAxisKey = columnList[3];
+        var askTimeAxisKey = columnList[7];
+        var bidSizeAxisKey = columnList[6];
+        var askSizeAxisKey = columnList[10];
+
+
+        // Get each entry from the points list
         // Also maintain a dict for prices
-        for (int i = 1; i < csvLines.Length; i++)
+        for (int i = 1; i < pointList.Count; i++)
         {
-            string[] rowData = csvLines[i].Split(',');
-
-            // Debug.Log(rowData[3]);
-
-            //TODO change the indices being used here when Diane has cleaned data up
             //AskPrice, BidPrice, AskSize, BidSize, AskTime, BidTime
-            //Create entry for list (maybe not used)
             var entry = new Entry
             {
-                BidTime = dateTimeToFloat(DateTime.ParseExact(rowData[3].Substring(0,15), "yyyyMMdd-HHmmss", null)),
-                BidPrice = Convert.ToSingle(rowData[5]),
-                BidSize = Convert.ToInt16(rowData[6]),
-                AskTime = dateTimeToFloat(DateTime.ParseExact(rowData[7].Substring(0,15), "yyyyMMdd-HHmmss", null)),
-                AskPrice = Convert.ToSingle(rowData[9]),
-                AskSize = Convert.ToInt16(rowData[10])
+                BidTime = dateTimeToFloat(DateTime.ParseExact(Convert.ToString(pointList[i][bidTimeAxisKey]).Substring(0,15), "yyyyMMdd-HHmmss", null)),
+                BidPrice = Convert.ToSingle(pointList[i][bidPriceAxisKey]),
+                BidSize = Convert.ToInt16(pointList[i][bidSizeAxisKey]),
+                AskTime = dateTimeToFloat(DateTime.ParseExact(Convert.ToString(pointList[i][askTimeAxisKey]).Substring(0,15), "yyyyMMdd-HHmmss", null)),
+                AskPrice = Convert.ToSingle(pointList[i][askPriceAxisKey]),
+                AskSize = Convert.ToInt16(pointList[i][askSizeAxisKey])
             };
 
             //TODO maybe find another method for this due to float equality check
@@ -129,12 +125,12 @@ public class GetOrderbookData : MonoBehaviour
                 float yPos = current;
                 float zPos = timePoint.Key;
 
-                minPrice = Math.Min(minPrice, xPos);
-                maxPrice = Math.Max(maxPrice, xPos);
-                minSize = Math.Min(minSize, yPos);
-                maxSize = Math.Max(maxSize, yPos);
-                minTime = Math.Min(minTime, zPos);
-                maxTime = Math.Max(maxTime, zPos);
+                //minPrice = Math.Min(minPrice, xPos);
+                //maxPrice = Math.Max(maxPrice, xPos);
+                //minSize = Math.Min(minSize, yPos);
+                //maxSize = Math.Max(maxSize, yPos);
+                //minTime = Math.Min(minTime, zPos);
+                //maxTime = Math.Max(maxTime, zPos);
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
             }
@@ -143,27 +139,29 @@ public class GetOrderbookData : MonoBehaviour
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
-            //for each price in decreasing order (so it is cumulative)
+            //for each price in increasing order (so it is cumulative)
             int current = 0;
-            foreach(KeyValuePair<float, int> ask in timePoint.Value.Reverse())
+            foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
                 float xPos = ask.Key - minPrice;
                 current += ask.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
 
-                minPrice = Math.Min(minPrice, xPos);
-                maxPrice = Math.Max(maxPrice, xPos);
-                minSize = Math.Min(minSize, yPos);
-                maxSize = Math.Max(maxSize, yPos);
-                minTime = Math.Min(minTime, zPos);
-                maxTime = Math.Max(maxTime, zPos);
+                //minPrice = Math.Min(minPrice, xPos);
+                //maxPrice = Math.Max(maxPrice, xPos);
+                //minSize = Math.Min(minSize, yPos);
+                //maxSize = Math.Max(maxSize, yPos);
+                //minTime = Math.Min(minTime, zPos);
+                //maxTime = Math.Max(maxTime, zPos);
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
             }
         }
 
-        return (positions, minPrice, maxPrice, minSize, maxSize, minTime, maxTime);
+        //TODO maybe remove all the min/max stuff, not sure why this was ever needed? maybe for scaling idk
+
+        return positions;
     }
 }
 
