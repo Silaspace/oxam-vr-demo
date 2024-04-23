@@ -17,9 +17,19 @@ public enum GraphType
     None
 }
 
+public enum GraphColor
+{
+    Magma,
+    Inferno,
+    Plasma,
+    Viridis,
+    Static,
+    None
+}
+
 public interface GraphRenderer
 {
-    public void update(List<Vector3> vectorList, List<string> labelList);
+    public void update(Graph graphData);
 }
 
 public interface DataProcesser
@@ -35,6 +45,7 @@ public class Graph : MonoBehaviour
     public string filename;
     public GraphType graphtype = GraphType.None;
     public DataType datatype = DataType.None;
+    public GraphColor graphcolor = GraphColor.None;
     public int scale = 1;
     public Vector3 position = new Vector3(0, 0, 0);
 
@@ -43,6 +54,9 @@ public class Graph : MonoBehaviour
     private List<Dictionary<string, object>> rawData;
     private List<Vector3> vectorList;
     private List<string> labelList;
+    private List<Color> colorList;
+    private Vector3 vectorMax;
+    private Vector3 vectorMin;
     private bool graphUpdated;
 
 
@@ -50,12 +64,12 @@ public class Graph : MonoBehaviour
 	{
 		if (graphUpdated)
 		{
-            graphRenderer.update(vectorList, labelList);
+            graphRenderer.update(this);
             graphUpdated = false;
 		}
 	}
 
-    void Start()
+    void onPress()
     {
         //onPress();
     }
@@ -66,17 +80,35 @@ public class Graph : MonoBehaviour
 
         getData();
         processData();
+        colorGraph();
         chooseRenderer();
 
         graphUpdated = true;
 
     }
 
+    public List<Vector3> getVectorList()
+    {
+        return vectorList;
+    }
+
+    public List<string> getLabels()
+    {
+        return labelList;
+    }
+    
+    public List<Color> getColors()
+    {
+        return colorList;
+    }
+
     public void updateFile(string newFilename)
     {
         Debug.Log("Graph.cs :: Update filename attribute");
         filename = newFilename;
-        //get new data
+        getData();
+        processData();
+        colorGraph();
         graphUpdated = true;
     }
 
@@ -85,6 +117,7 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update datatype attribute");
         datatype = newDatatype;
         processData();
+        colorGraph();
         graphUpdated = true;
     }
 
@@ -92,6 +125,15 @@ public class Graph : MonoBehaviour
     {
         Debug.Log("Graph.cs :: Update datatype attribute");
         graphtype = newGraphtype;
+        chooseRenderer();
+        graphUpdated = true;
+    }
+
+    public void updateGraphColor(GraphColor newGraphColor)
+    {
+        Debug.Log("Graph.cs :: Update datatype attribute");
+        graphcolor = newGraphColor;
+        colorGraph();
         graphUpdated = true;
     }
 
@@ -104,6 +146,8 @@ public class Graph : MonoBehaviour
     private void processData()
     {
         Debug.Log("Graph.cs :: Process the rawData into a vectorList");
+
+        // Proces rawData into the vectorList
         switch(datatype) 
         {
         case DataType.Scatter:
@@ -118,6 +162,15 @@ public class Graph : MonoBehaviour
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");
             break;
+        }
+
+        // Update other properties bsed on the new vectorList
+        Debug.Log("Graph.cs :: Set vectorMax and vectorMin");
+        vectorMax = vectorList[0];
+        vectorMin = vectorMax;
+        for (int i = 1; i < vectorList.Count; i++){
+            vectorMax = Vector3.Max(vectorMax, vectorList[i]);
+            vectorMin = Vector3.Min(vectorMin, vectorList[i]);
         }
     }
 
@@ -138,6 +191,39 @@ public class Graph : MonoBehaviour
             break;
         case GraphType.None:
             Debug.Log("Graph.cs :: No Graphtype selected");
+            break;
+        }
+    }
+
+    private void colorGraph()
+    {
+        Debug.Log("Graph.cs :: Assign a color to every point in the vectorList");
+        colorList = new List<Color>();
+
+        switch(graphcolor) 
+        {
+        case GraphColor.Magma:
+        case GraphColor.Inferno:
+        case GraphColor.Plasma:
+        case GraphColor.Viridis:
+            for (int i = 0; i < vectorList.Count; i += 1)
+            {
+                colorList.Add(
+                    CustomColors.GetColor(
+                        vectorList[i].y,
+                        vectorMin.y,
+                        vectorMax.y,
+                        graphcolor));
+            }
+            break;
+        case GraphColor.Static:
+            for (int i = 0; i < vectorList.Count; i += 1)
+            {
+                colorList.Add(Color.red);
+            }
+            break;
+        case GraphColor.None:
+            Debug.Log("Graph.cs :: No color selected");
             break;
         }
     }

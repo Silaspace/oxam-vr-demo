@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomGradient : MonoBehaviour
+public class CustomColors : MonoBehaviour
 {
     //the method GetColor(val, minVal, maxVal, colorpallete) 
     //returns a color from a lookup table for color palletes "inferno", "magma", "viridis", "plasma"
@@ -1037,52 +1037,39 @@ public class CustomGradient : MonoBehaviour
                  {0.983868, 0.904867, 0.136897},
                  {0.993248, 0.906157, 0.143936}};
 
-    public static Color GetColorM(float val, float minVal, float maxVal)
+    public static Color GetColor(float val, float minVal, float maxVal, GraphColor colorpallete)
     {
         float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
         int arrayPos = (int)(grayScale*255);
-        byte r = (byte)(magma_data[arrayPos, 0]*255);
-        byte g = (byte)(magma_data[arrayPos, 1]*255);
-        byte b = (byte)(magma_data[arrayPos, 2]*255);
-        Color color = new Color32(r,g,b,255);
-        return color;
-    }
-    public static Color GetColorI(float val, float minVal, float maxVal)
-    {
-        float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
-        int arrayPos = (int)(grayScale*255);
-        byte r = (byte)(inferno_data[arrayPos, 0]*255);
-        byte g = (byte)(inferno_data[arrayPos, 1]*255);
-        byte b = (byte)(inferno_data[arrayPos, 2]*255);
-        Color color = new Color32(r,g,b,255);
-        return color;
-    }
-    public static Color GetColorP(float val, float minVal, float maxVal)
-    {
-        float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
-        int arrayPos = (int)(grayScale*255);
-        byte r = (byte)(plasma_data[arrayPos, 0]*255);
-        byte g = (byte)(plasma_data[arrayPos, 1]*255);
-        byte b = (byte)(plasma_data[arrayPos, 2]*255);
-        Color color = new Color32(r,g,b,255);
-        return color;
-    }
-    public static Color GetColorV(float val, float minVal, float maxVal)
-    {
-        float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
-        int arrayPos = (int)(grayScale*255);
-        byte r = (byte)(viridis_data[arrayPos, 0]*255);
-        byte g = (byte)(viridis_data[arrayPos, 1]*255);
-        byte b = (byte)(viridis_data[arrayPos, 2]*255);
-        Color color = new Color32(r,g,b,255);
-        return color;
-    }
-    public static Color GetColor(float val, float minVal, float maxVal, string colorpallete)
-    {
-        if (colorpallete =="magma") return GetColorM(val, minVal, maxVal);
-        if (colorpallete =="inferno") return GetColorI(val, minVal, maxVal);
-        if (colorpallete =="plasma") return GetColorP(val, minVal, maxVal);
-        if (colorpallete =="viridis") return GetColorV(val, minVal, maxVal);
-        return GetColorV(val, minVal, maxVal);
+
+        switch(colorpallete)
+        {
+            case GraphColor.Magma:
+                return new Color32(
+                    (byte)(magma_data[arrayPos, 0]*255),
+                    (byte)(magma_data[arrayPos, 1]*255),
+                    (byte)(magma_data[arrayPos, 2]*255),
+                    255);
+            case GraphColor.Inferno:
+                return new Color32(
+                    (byte)(inferno_data[arrayPos, 0]*255),
+                    (byte)(inferno_data[arrayPos, 1]*255),
+                    (byte)(inferno_data[arrayPos, 2]*255),
+                    255);
+            case GraphColor.Plasma:
+                return new Color32(
+                    (byte)(plasma_data[arrayPos, 0]*255),
+                    (byte)(plasma_data[arrayPos, 1]*255),
+                    (byte)(plasma_data[arrayPos, 2]*255),
+                    255);
+            case GraphColor.Viridis:
+                return new Color32(
+                    (byte)(viridis_data[arrayPos, 0]*255),
+                    (byte)(viridis_data[arrayPos, 1]*255),
+                    (byte)(viridis_data[arrayPos, 2]*255),
+                    255);
+            default:
+                return new Color32(0, 0, 0, 0);
+        }
     }
 }
