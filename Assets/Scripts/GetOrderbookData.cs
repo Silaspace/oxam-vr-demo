@@ -52,7 +52,6 @@ public class GetOrderbookData : MonoBehaviour
         var bidSizeAxisKey = columnList[6];
         var askSizeAxisKey = columnList[10];
 
-
         // Get each entry from the points list
         // Also maintain a dict for prices
         for (int i = 1; i < pointList.Count; i++)

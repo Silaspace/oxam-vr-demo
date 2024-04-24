@@ -5234,9 +5234,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: 
-  filename: Data/RadcliffeTemperature/temp
+  filename: Data/AppleOrderbook/orderbooks_appl
   graphtype: 1
-  datatype: 3
+  datatype: 2
   graphcolor: 2
   scale: 1
   position: {x: 0, y: 0, z: 0}
