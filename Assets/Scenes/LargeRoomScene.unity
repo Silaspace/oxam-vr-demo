@@ -353,6 +353,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
+      propertyPath: position.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: displayName
       value: Radcliffe Temperature
       objectReference: {fileID: 0}
@@ -1020,6 +1024,10 @@ PrefabInstance:
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: graphcolor
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
+      propertyPath: position.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: displayName
@@ -28353,15 +28361,15 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 46955690c3a6634408dcff8af6b80e54, type: 2}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: scale.x
-      value: 40
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: scale.y
-      value: 40
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: scale.z
-      value: 40
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: datatype
