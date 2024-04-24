@@ -28,7 +28,7 @@ public class GetOrderbookData : MonoBehaviour
 {
     private static float dateTimeToFloat(DateTime dt)
     {
-        return (float)0.1*(dt.Minute + 0.01666f*dt.Second);
+        return (float)0.1*(dt.Minute + 0*0.01666f*dt.Second);
     }
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
