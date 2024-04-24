@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ProcessSharePriceData : DataProcesser
+public class ProcessSharePriceData
 {
     // Converts strings of the form "YYYY-MM-DD" to their corresponding unix timestamp (seconds since Jan 1st, 1970).
     public static float convertToUnixTimestamp(string date)
@@ -80,7 +80,7 @@ public class ProcessSharePriceData : DataProcesser
             int periodIndex = (int)Math.Floor((currentTimestamp - startTimestamp) / repeatPeriod);
             float periodStart = startTimestamp + periodIndex * repeatPeriod;
             float periodEnd = startTimestamp + (periodIndex + 1) * repeatPeriod;
-            float timeShort = (currentTimestamp - periodStart) / (periodEnd - periodStart) * repeatPeriod
+            float timeShort = (currentTimestamp - periodStart) / (periodEnd - periodStart) * repeatPeriod;
             
             // Add point
             processedPoints.Add(new Vector3(timeShort, price, periodStart));

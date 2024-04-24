@@ -24,7 +24,7 @@ public class Vector3EqualityComparer : IEqualityComparer<Vector3>
     }
 }
 
-public class ProcessOrderbookData : DataProcesser
+public class ProcessOrderbookData
 {
     private static float dateTimeToFloat(DateTime dt)
     {

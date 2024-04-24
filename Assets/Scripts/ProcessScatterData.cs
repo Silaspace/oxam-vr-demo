@@ -4,9 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-public class ProcessScatterData : DataProcesser
+public class ProcessScatterData
 {
-    public static (List<Vector3>, List<string>) processScatterPlot(List<Dictionary<string, object>> pointList)
+    public static (List<Vector3>, List<string>) process(List<Dictionary<string, object>> pointList)
     {
         // Indices for columns to be assigned - potential parameters
         int xAxis = 0;
@@ -23,10 +23,7 @@ public class ProcessScatterData : DataProcesser
         var zAxisKey = columnList[zAxis];
         var labelKey = columnList[labelIndex];
 
-        // Declare a labels list
-        var labels = new List<string>();
-
-        // Loop thruough pointList extract the data
+        // Loop through pointList extract the data
         Debug.Log("GetData.cs :: Extract vectors");
         var vectorList = new List<Vector3>();
         var labels = new List<string>();

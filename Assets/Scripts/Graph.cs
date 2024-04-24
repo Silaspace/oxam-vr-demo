@@ -34,7 +34,7 @@ public interface GraphRenderer
 
 public interface DataProcesser
 {
-    public void process(List<Dictionary<string, object>> rawData);
+    public List<Vector3> process(List<Dictionary<string, object>> rawData);
 }
 
 public class Graph : MonoBehaviour
@@ -81,7 +81,7 @@ public class Graph : MonoBehaviour
         getData();
         processData();
         colorGraph();
-        scaleData()
+        scaleData();
         chooseRenderer();
 
         graphUpdated = true;
@@ -152,13 +152,13 @@ public class Graph : MonoBehaviour
         switch(datatype) 
         {
         case DataType.Scatter:
-            (vectorList, labelList) = GetData.process(rawData);
+            (vectorList, labelList) = ProcessScatterData.process(rawData);
             break;
         case DataType.TimeValue:
-            vectorList = GetSharePriceData.process(rawData);
+            vectorList = ProcessSharePriceData.process(rawData);
             break;
         case DataType.Orderbooks:
-            vectorList = GetOrderbookData.process(rawData);
+            vectorList = ProcessOrderbookData.process(rawData);
             break;
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");
@@ -238,7 +238,7 @@ public class Graph : MonoBehaviour
 
         for (int i = 0; i < vectorList.Count; i++)
         {
-            var vector = vectorList[i]
+            var vector = vectorList[i];
             vector.x = map(vector.x, vectorMin.x, vectorMax.x, -xSize, xSize);
             vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, ySize);
             vector.z = map(vector.z, vectorMin.z, vectorMax.z, -zSize, zSize);
@@ -248,6 +248,6 @@ public class Graph : MonoBehaviour
 
     private float map(float x, float input_start, float input_end, float output_start, float output_end)
     {
-        return (x - input_start) / (input_end - input_start) * (output_end - output_start) + output_start
+        return (x - input_start) / (input_end - input_start) * (output_end - output_start) + output_start;
     }
 }
