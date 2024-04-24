@@ -24,7 +24,7 @@ public class Vector3EqualityComparer : IEqualityComparer<Vector3>
     }
 }
 
-public class GetOrderbookData : MonoBehaviour
+public class GetOrderbookData : DataProcesser
 {
     private static float dateTimeToFloat(DateTime dt)
     {

@@ -35,7 +35,6 @@ public interface GraphRenderer
 public interface DataProcesser
 {
     public void process(List<Dictionary<string, object>> rawData);
-    public void scale(List<Vector3> vectorList);
 }
 
 public class Graph : MonoBehaviour
