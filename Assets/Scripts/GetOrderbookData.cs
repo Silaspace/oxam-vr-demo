@@ -33,11 +33,6 @@ public class GetOrderbookData : MonoBehaviour
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
     {
-        // Proposed Parameters
-        float xSize = 1.5f;
-        float ySize = 0.5f;
-        float zSize = 1.5f;
-
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();
         SortedDictionary<float, SortedDictionary<float, int>> asks = new SortedDictionary<float, SortedDictionary<float, int>>();
@@ -181,23 +176,6 @@ public class GetOrderbookData : MonoBehaviour
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
             }
-        }
-
-        // Find minimum and maximum values 
-        var vectorMax = positions[0];
-        var vectorMin = vectorMax;
-        for (int i = 1; i < positions.Count; i++){
-            vectorMax = Vector3.Max(vectorMax, positions[i]);
-            vectorMin = Vector3.Min(vectorMin, positions[i]);
-        }
-        
-        // Map values into the correct range
-        for (int i = 0; i < positions.Count; i++)
-        {
-            float x = MapRange(positions[i].x, vectorMin.x, vectorMax.x, -xSize, xSize);
-            float y = MapRange(positions[i].y, vectorMin.y, vectorMax.y, 0, ySize);
-            float z = MapRange(positions[i].z, vectorMin.z, vectorMax.z, -zSize, zSize);
-            positions[i] = new Vector3(x, y, z);
         }
 
         // Remove duplicate point

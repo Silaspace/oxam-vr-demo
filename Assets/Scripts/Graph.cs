@@ -46,12 +46,13 @@ public class Graph : MonoBehaviour
     public GraphType graphtype = GraphType.None;
     public DataType datatype = DataType.None;
     public GraphColor graphcolor = GraphColor.None;
-    public int scale = 1;
+    public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
 
     // Internal state
     private GraphRenderer graphRenderer;
     private List<Dictionary<string, object>> rawData;
+
     private List<Vector3> vectorList;
     private List<string> labelList;
     private List<Color> colorList;
@@ -81,6 +82,7 @@ public class Graph : MonoBehaviour
         getData();
         processData();
         colorGraph();
+        scaleData()
         chooseRenderer();
 
         graphUpdated = true;
@@ -164,7 +166,7 @@ public class Graph : MonoBehaviour
             break;
         }
 
-        // Update other properties bsed on the new vectorList
+        // Update other properties based on the new vectorList
         Debug.Log("Graph.cs :: Set vectorMax and vectorMin");
         vectorMax = vectorList[0];
         vectorMin = vectorMax;
@@ -226,5 +228,27 @@ public class Graph : MonoBehaviour
             Debug.Log("Graph.cs :: No color selected");
             break;
         }
+    }
+
+    private void scaleData()
+    {
+        // Proposed Parameters
+        float xSize = 1.5f;
+        float ySize = 0.5f;
+        float zSize = 1.5f;
+
+        for (int i = 0; i < vectorList.Count; i++)
+        {
+            var vector = vectorList[i]
+            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -xSize, xSize);
+            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, ySize);
+            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -zSize, zSize);
+            vectorList[i] = Vector3.Scale(vector + position, scale);
+        }
+    }
+
+    private float map(float x, float input_start, float input_end, float output_start, float output_end)
+    {
+        return (x - input_start) / (input_end - input_start) * (output_end - output_start) + output_start
     }
 }
