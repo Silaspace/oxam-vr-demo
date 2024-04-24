@@ -28,7 +28,7 @@ public class GetOrderbookData : MonoBehaviour
 {
     private static float dateTimeToFloat(DateTime dt)
     {
-        return (float)0.1*(dt.Minute + 0.01666f*dt.Second);//We do this to the nearest minute, but possible to include any amount of time in the calculation
+        return (float)0.1*(dt.Minute + 0.01666f*dt.Second);
     }
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
@@ -41,13 +41,6 @@ public class GetOrderbookData : MonoBehaviour
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();
         SortedDictionary<float, SortedDictionary<float, int>> asks = new SortedDictionary<float, SortedDictionary<float, int>>();
-
-        float minPrice = float.MaxValue;
-        //float maxPrice = float.MinValue;
-        //float minSize = float.MaxValue;
-        //float maxSize = float.MinValue;
-        //float minTime = float.MaxValue;
-        //float maxTime = float.MinValue;
 
         //TODO change the indices being used here when Diane has cleaned data up
         //Get column data
@@ -122,9 +115,6 @@ public class GetOrderbookData : MonoBehaviour
                 };
                 asks.Add(entry.AskTime, newDict);
             }
-
-            minPrice = Math.Min(minPrice, Math.Min(entry.AskPrice, entry.AskPrice));
-
         }
 
         //TODO for now, we have bids and asks in the same list. we need to decide whether to do this as
@@ -144,17 +134,10 @@ public class GetOrderbookData : MonoBehaviour
             int current = 0;
             foreach(KeyValuePair<float, int> bid in timePoint.Value.Reverse())
             {
-                float xPos = bid.Key - minPrice;
+                float xPos = bid.Key;
                 current += bid.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
-
-                //minPrice = Math.Min(minPrice, xPos);
-                //maxPrice = Math.Max(maxPrice, xPos);
-                //minSize = Math.Min(minSize, yPos);
-                //maxSize = Math.Max(maxSize, yPos);
-                //minTime = Math.Min(minTime, zPos);
-                //maxTime = Math.Max(maxTime, zPos);
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
             }
@@ -167,17 +150,10 @@ public class GetOrderbookData : MonoBehaviour
             int current = 0;
             foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
-                float xPos = ask.Key - minPrice;
+                float xPos = ask.Key;
                 current += ask.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
-
-                //minPrice = Math.Min(minPrice, xPos);
-                //maxPrice = Math.Max(maxPrice, xPos);
-                //minSize = Math.Min(minSize, yPos);
-                //maxSize = Math.Max(maxSize, yPos);
-                //minTime = Math.Min(minTime, zPos);
-                //maxTime = Math.Max(maxTime, zPos);
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
             }
