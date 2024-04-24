@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class CustomColors : MonoBehaviour
 {
-    //the method GetColor(val, minVal, maxVal, colorpallete) 
-    //returns a color from a lookup table for color palletes "inferno", "magma", "viridis", "plasma"
-    //that corresponds to val from [minVal, maxVal]
-    //the palletes are colorblind safe
-    //I didn't use gradient object because it can only have 8 key colors
     private readonly static double[,] magma_data = {{0.001462, 0.000466, 0.013866},
                {0.002258, 0.001295, 0.018331},
                {0.003279, 0.002305, 0.023708},
@@ -1037,6 +1032,10 @@ public class CustomColors : MonoBehaviour
                  {0.983868, 0.904867, 0.136897},
                  {0.993248, 0.906157, 0.143936}};
 
+
+    // The method GetColor(val, minVal, maxVal, colorpallete) 
+    // Returns a color from a lookup table for color palletes "inferno", "magma", "viridis", "plasma"
+    // The palletes are colorblind safe
     public static Color GetColor(float val, float minVal, float maxVal, GraphColor colorpallete)
     {
         float grayScale = Mathf.InverseLerp(minVal, maxVal, val);
