@@ -24,7 +24,7 @@ public class Vector3EqualityComparer : IEqualityComparer<Vector3>
     }
 }
 
-public class GetOrderbookData : DataProcesser
+public class ProcessOrderbookData : DataProcesser
 {
     private static float dateTimeToFloat(DateTime dt)
     {
@@ -180,15 +180,6 @@ public class GetOrderbookData : DataProcesser
 
         // Remove duplicate point
         return positions.Distinct(new Vector3EqualityComparer()).ToList();
-    }
-
-    public static float MapRange(float value, float leftMin, float leftMax, float rightMin, float rightMax)
-    {
-        float leftSpan = leftMax - leftMin;
-        float rightSpan = rightMax - rightMin;
-        float valueScaled = (value - leftMin) / leftSpan;
-        
-        return rightMin + (valueScaled * rightSpan);
     }
 }
 

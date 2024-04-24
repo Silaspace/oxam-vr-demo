@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-public class GetData : DataProcesser
+public class ProcessScatterData : DataProcesser
 {
     public static (List<Vector3>, List<string>) processScatterPlot(List<Dictionary<string, object>> pointList)
     {

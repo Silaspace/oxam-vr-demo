@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class GetSharePriceData : DataProcesser
+public class ProcessSharePriceData : DataProcesser
 {
     // Converts strings of the form "YYYY-MM-DD" to their corresponding unix timestamp (seconds since Jan 1st, 1970).
     public static float convertToUnixTimestamp(string date)
