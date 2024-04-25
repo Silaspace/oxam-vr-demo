@@ -353,6 +353,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 46955690c3a6634408dcff8af6b80e54, type: 2}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
+      propertyPath: scale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: datatype
       value: 3
       objectReference: {fileID: 0}
@@ -1090,6 +1094,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 46955690c3a6634408dcff8af6b80e54, type: 2}
+    - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
+      propertyPath: scale.y
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: datatype
       value: 2
@@ -18953,7 +18961,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: graphcolor
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7443646178017736120, guid: 8fd60f83dc41c49ae9570352d3975a76, type: 3}
       propertyPath: position.y

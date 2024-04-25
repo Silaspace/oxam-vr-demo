@@ -24,6 +24,7 @@ public enum GraphColor
     Plasma,
     Viridis,
     Static,
+    ByLabel,
     None
 }
 
@@ -222,6 +223,25 @@ public class Graph : MonoBehaviour
             for (int i = 0; i < vectorList.Count; i += 1)
             {
                 colorList.Add(Color.red);
+            }
+            break;
+        case GraphColor.ByLabel:
+            Dictionary<string, Color> labelColors = new Dictionary<string, Color>();
+
+            for (int i = 0; i < vectorList.Count; i += 1)
+            {
+                string label = labelList[i];
+
+                if (labelColors.ContainsKey(label))
+                {
+                    colorList.Add(labelColors[label]);
+                }
+                else
+                {
+                    Color newColor = CustomColors.GetLabelColor(label);
+                    labelColors[label] = newColor;
+                    colorList.Add(newColor);
+                }
             }
             break;
         case GraphColor.None:
