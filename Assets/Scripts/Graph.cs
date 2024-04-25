@@ -242,7 +242,7 @@ public class Graph : MonoBehaviour
             vector.x = map(vector.x, vectorMin.x, vectorMax.x, -xSize, xSize);
             vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, ySize);
             vector.z = map(vector.z, vectorMin.z, vectorMax.z, -zSize, zSize);
-            vectorList[i] = Vector3.Scale(vector + position, scale);
+            vectorList[i] = Vector3.Scale(vector, scale) + position;
         }
     }
 
