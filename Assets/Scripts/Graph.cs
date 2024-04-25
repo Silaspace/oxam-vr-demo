@@ -71,7 +71,7 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        onPress();
+        //onPress();
     }
 
     void onPress()

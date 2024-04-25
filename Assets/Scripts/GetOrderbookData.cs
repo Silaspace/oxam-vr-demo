@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -26,9 +27,16 @@ public class Vector3EqualityComparer : IEqualityComparer<Vector3>
 
 public class GetOrderbookData : MonoBehaviour
 {
-    private static float dateTimeToFloat(DateTime dt)
+    public static float convertToUnixTimestamp(string date)
     {
-        return (float)0.1*(dt.Minute + 0.01666f*dt.Second);
+        DateTime dateTime;
+        if (DateTime.TryParseExact(date, "yyyyMMdd-HHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime)) {
+            DateTime epoch = new DateTime(1970, 1, 1);
+            TimeSpan timeSpan = dateTime - epoch;
+            return (float)timeSpan.TotalSeconds;
+        } else {
+            throw new ArgumentException("Invalid date format " + date);
+        }
     }
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
@@ -59,10 +67,10 @@ public class GetOrderbookData : MonoBehaviour
             //AskPrice, BidPrice, AskSize, BidSize, AskTime, BidTime
             var entry = new Entry
             {
-                BidTime = dateTimeToFloat(DateTime.ParseExact(Convert.ToString(pointList[i][bidTimeAxisKey]).Substring(0,15), "yyyyMMdd-HHmmss", null)),
+                BidTime = convertToUnixTimestamp(Convert.ToString(pointList[i][bidTimeAxisKey]).Substring(0,15)),
                 BidPrice = Convert.ToSingle(pointList[i][bidPriceAxisKey]),
                 BidSize = Convert.ToInt16(pointList[i][bidSizeAxisKey]),
-                AskTime = dateTimeToFloat(DateTime.ParseExact(Convert.ToString(pointList[i][askTimeAxisKey]).Substring(0,15), "yyyyMMdd-HHmmss", null)),
+                AskTime = convertToUnixTimestamp(Convert.ToString(pointList[i][askTimeAxisKey]).Substring(0,15)),
                 AskPrice = Convert.ToSingle(pointList[i][askPriceAxisKey]),
                 AskSize = Convert.ToInt16(pointList[i][askSizeAxisKey])
             };
