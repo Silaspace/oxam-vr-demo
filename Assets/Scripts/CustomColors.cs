@@ -1032,6 +1032,18 @@ public class CustomColors : MonoBehaviour
                  {0.983868, 0.904867, 0.136897},
                  {0.993248, 0.906157, 0.143936}};
 
+    private readonly static List<Color> label_color_data = new List<Color> {
+        new Color32(0xE6, 0x9F, 0x00, 0xFF), // orange
+        new Color32(0x56, 0xB4, 0xE9, 0xFF), // skyblue
+        new Color32(0x00, 0x9E, 0x73, 0xFF), // bluishgreen
+        new Color32(0xF0, 0xE4, 0x42, 0xFF), // yellow
+        new Color32(0x00, 0x72, 0xB2, 0xFF), // blue
+        new Color32(0xD5, 0x5E, 0x00, 0xFF), // vermillion
+        new Color32(0xCC, 0x79, 0xA7, 0xFF), // reddishpurple
+        new Color32(0x99, 0x99, 0x99, 0xFF)  // gray
+    };
+
+    private static int next_label_color_data_index = 0;
 
     // The method GetColor(val, minVal, maxVal, colorpallete) 
     // Returns a color from a lookup table for color palletes "inferno", "magma", "viridis", "plasma"
@@ -1070,5 +1082,22 @@ public class CustomColors : MonoBehaviour
             default:
                 return new Color32(0, 0, 0, 0);
         }
+    }
+
+    // Returns a color from a color pallete appropriate for labelled data
+    public static Color GetLabelColor(string label)
+    {
+        // Default to picking a random color if we've used all predefined colors up already
+        if (next_label_color_data_index >= label_color_data.Count) {
+            return new Color(
+                UnityEngine.Random.Range(0f, 1f),
+                UnityEngine.Random.Range(0f, 1f),
+                UnityEngine.Random.Range(0f, 1f)
+            );
+        }
+
+        Color outputColor = label_color_data[next_label_color_data_index];
+        next_label_color_data_index += 1;
+        return outputColor;
     }
 }
