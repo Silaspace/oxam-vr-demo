@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -24,30 +25,25 @@ public class Vector3EqualityComparer : IEqualityComparer<Vector3>
     }
 }
 
-public class GetOrderbookData : MonoBehaviour
+public class ProcessOrderbookData
 {
-    private static float dateTimeToFloat(DateTime dt)
+    public static float convertToUnixTimestamp(string date)
     {
-        return (float)0.1*(dt.Minute + 0.01666f*dt.Second);//We do this to the nearest minute, but possible to include any amount of time in the calculation
+        DateTime dateTime;
+        if (DateTime.TryParseExact(date, "yyyyMMdd-HHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime)) {
+            DateTime epoch = new DateTime(1970, 1, 1);
+            TimeSpan timeSpan = dateTime - epoch;
+            return (float)timeSpan.TotalSeconds;
+        } else {
+            throw new ArgumentException("Invalid date format " + date);
+        }
     }
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
     {
-        // Proposed Parameters
-        float xSize = 1.5f;
-        float ySize = 0.5f;
-        float zSize = 1.5f;
-
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();
         SortedDictionary<float, SortedDictionary<float, int>> asks = new SortedDictionary<float, SortedDictionary<float, int>>();
-
-        float minPrice = float.MaxValue;
-        //float maxPrice = float.MinValue;
-        //float minSize = float.MaxValue;
-        //float maxSize = float.MinValue;
-        //float minTime = float.MaxValue;
-        //float maxTime = float.MinValue;
 
         //TODO change the indices being used here when Diane has cleaned data up
         //Get column data
@@ -59,7 +55,6 @@ public class GetOrderbookData : MonoBehaviour
         var bidSizeAxisKey = columnList[6];
         var askSizeAxisKey = columnList[10];
 
-
         // Get each entry from the points list
         // Also maintain a dict for prices
         for (int i = 1; i < pointList.Count; i++)
@@ -67,15 +62,14 @@ public class GetOrderbookData : MonoBehaviour
             //AskPrice, BidPrice, AskSize, BidSize, AskTime, BidTime
             var entry = new Entry
             {
-                BidTime = dateTimeToFloat(DateTime.ParseExact(Convert.ToString(pointList[i][bidTimeAxisKey]).Substring(0,15), "yyyyMMdd-HHmmss", null)),
+                BidTime = convertToUnixTimestamp(Convert.ToString(pointList[i][bidTimeAxisKey]).Substring(0,15)),
                 BidPrice = Convert.ToSingle(pointList[i][bidPriceAxisKey]),
                 BidSize = Convert.ToInt16(pointList[i][bidSizeAxisKey]),
-                AskTime = dateTimeToFloat(DateTime.ParseExact(Convert.ToString(pointList[i][askTimeAxisKey]).Substring(0,15), "yyyyMMdd-HHmmss", null)),
+                AskTime = convertToUnixTimestamp(Convert.ToString(pointList[i][askTimeAxisKey]).Substring(0,15)),
                 AskPrice = Convert.ToSingle(pointList[i][askPriceAxisKey]),
                 AskSize = Convert.ToInt16(pointList[i][askSizeAxisKey])
             };
 
-            //TODO maybe find another method for this due to float equality check
             //add ask and bid to each dict
             //dict is used to calculate total size of bids at same time and same price
 
@@ -122,13 +116,10 @@ public class GetOrderbookData : MonoBehaviour
                 };
                 asks.Add(entry.AskTime, newDict);
             }
-
-            minPrice = Math.Min(minPrice, Math.Min(entry.AskPrice, entry.AskPrice));
-
         }
 
         //TODO for now, we have bids and asks in the same list. we need to decide whether to do this as
-        //two meshes or one big mesh with two colour gradients
+        //TODO two meshes or one big mesh with two colour gradients
         //get a list of points to plot
         //for now we have:
         //x-axis: price
@@ -138,79 +129,49 @@ public class GetOrderbookData : MonoBehaviour
 
         //TODO current inefficient implementation to test cumulative look
         //for each time value
+        
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in bids)
         {
             //for each price in decreasing order (so it is cumulative)
             int current = 0;
+            float lowPrice = 0.0f; //used to add an additional point at the bottom left (testing how this looks)
             foreach(KeyValuePair<float, int> bid in timePoint.Value.Reverse())
             {
-                float xPos = bid.Key - minPrice;
+                float xPos = bid.Key;
                 current += bid.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
 
-                //minPrice = Math.Min(minPrice, xPos);
-                //maxPrice = Math.Max(maxPrice, xPos);
-                //minSize = Math.Min(minSize, yPos);
-                //maxSize = Math.Max(maxSize, yPos);
-                //minTime = Math.Min(minTime, zPos);
-                //maxTime = Math.Max(maxTime, zPos);
-
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                lowPrice = xPos;
             }
+            positions.Add(new Vector3(lowPrice+0.001f, 0, timePoint.Key));
         }
+        
 
+        
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
             //for each price in increasing order (so it is cumulative)
             int current = 0;
+            float highPrice = 0.0f;
             foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
-                float xPos = ask.Key - minPrice;
+                float xPos = ask.Key;
                 current += ask.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
 
-                //minPrice = Math.Min(minPrice, xPos);
-                //maxPrice = Math.Max(maxPrice, xPos);
-                //minSize = Math.Min(minSize, yPos);
-                //maxSize = Math.Max(maxSize, yPos);
-                //minTime = Math.Min(minTime, zPos);
-                //maxTime = Math.Max(maxTime, zPos);
-
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                highPrice = xPos;
             }
-        }
-
-        // Find minimum and maximum values 
-        var vectorMax = positions[0];
-        var vectorMin = vectorMax;
-        for (int i = 1; i < positions.Count; i++){
-            vectorMax = Vector3.Max(vectorMax, positions[i]);
-            vectorMin = Vector3.Min(vectorMin, positions[i]);
+            //positions.Add(new Vector3(highPrice-0.001f, 0, timePoint.Key));
         }
         
-        // Map values into the correct range
-        for (int i = 0; i < positions.Count; i++)
-        {
-            float x = MapRange(positions[i].x, vectorMin.x, vectorMax.x, -xSize, xSize);
-            float y = MapRange(positions[i].y, vectorMin.y, vectorMax.y, 0, ySize);
-            float z = MapRange(positions[i].z, vectorMin.z, vectorMax.z, -zSize, zSize);
-            positions[i] = new Vector3(x, y, z);
-        }
 
         // Remove duplicate point
         return positions.Distinct(new Vector3EqualityComparer()).ToList();
-    }
-
-    public static float MapRange(float value, float leftMin, float leftMax, float rightMin, float rightMax)
-    {
-        float leftSpan = leftMax - leftMin;
-        float rightSpan = rightMax - rightMin;
-        float valueScaled = (value - leftMin) / leftSpan;
-        
-        return rightMin + (valueScaled * rightSpan);
     }
 }
 
