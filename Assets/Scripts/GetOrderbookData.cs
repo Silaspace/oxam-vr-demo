@@ -28,7 +28,7 @@ public class GetOrderbookData : MonoBehaviour
 {
     private static float dateTimeToFloat(DateTime dt)
     {
-        return (float)0.1*(dt.Minute + 0*0.01666f*dt.Second);
+        return (float)0.1*(dt.Minute + 0.01666f*dt.Second);
     }
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
@@ -67,7 +67,6 @@ public class GetOrderbookData : MonoBehaviour
                 AskSize = Convert.ToInt16(pointList[i][askSizeAxisKey])
             };
 
-            //TODO maybe find another method for this due to float equality check
             //add ask and bid to each dict
             //dict is used to calculate total size of bids at same time and same price
 
@@ -117,7 +116,7 @@ public class GetOrderbookData : MonoBehaviour
         }
 
         //TODO for now, we have bids and asks in the same list. we need to decide whether to do this as
-        //two meshes or one big mesh with two colour gradients
+        //TODO two meshes or one big mesh with two colour gradients
         //get a list of points to plot
         //for now we have:
         //x-axis: price
@@ -127,10 +126,12 @@ public class GetOrderbookData : MonoBehaviour
 
         //TODO current inefficient implementation to test cumulative look
         //for each time value
+        
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in bids)
         {
             //for each price in decreasing order (so it is cumulative)
             int current = 0;
+            float lowPrice = 0.0f; //used to add an additional point at the bottom left (testing how this looks)
             foreach(KeyValuePair<float, int> bid in timePoint.Value.Reverse())
             {
                 float xPos = bid.Key;
@@ -139,14 +140,19 @@ public class GetOrderbookData : MonoBehaviour
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                lowPrice = xPos;
             }
+            positions.Add(new Vector3(lowPrice+0.001f, 0, timePoint.Key));
         }
+        
 
+        
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
             //for each price in increasing order (so it is cumulative)
             int current = 0;
+            float highPrice = 0.0f;
             foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
                 float xPos = ask.Key;
@@ -155,8 +161,11 @@ public class GetOrderbookData : MonoBehaviour
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                highPrice = xPos;
             }
+            //positions.Add(new Vector3(highPrice-0.001f, 0, timePoint.Key));
         }
+        
 
         // Find minimum and maximum values 
         var vectorMax = positions[0];
