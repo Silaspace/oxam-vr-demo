@@ -231,17 +231,12 @@ public class Graph : MonoBehaviour
 
     private void scaleData()
     {
-        // Proposed Parameters
-        float xSize = 1.5f;
-        float ySize = 0.5f;
-        float zSize = 1.5f;
-
         for (int i = 0; i < vectorList.Count; i++)
         {
             var vector = vectorList[i];
-            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -xSize, xSize);
-            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, ySize);
-            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -zSize, zSize);
+            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -1, 1);
+            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
+            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
             vectorList[i] = Vector3.Scale(vector, scale) + position;
         }
     }
