@@ -33,7 +33,7 @@ public class ProcessOrderbookData
         return (float) dt.Minute + 0.3333333f*(dt.Second/20);
     }
 
-    public static List<Vector3> process(List<Dictionary<string, object>> pointList)
+    public static (List<Vector3>, List<(int, int)>) process(List<Dictionary<string, object>> pointList)
     {
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();

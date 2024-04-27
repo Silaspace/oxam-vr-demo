@@ -5,6 +5,8 @@ using UnityEngine;
 using andywiecko.BurstTriangulator;
 using Unity.Collections;
 using Unity.Mathematics;
+using System.Linq;
+
 public class MeshGenerator : MonoBehaviour, GraphRenderer
 {
     // Private properties
@@ -46,18 +48,20 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
 
         //triangulate for each pair of indices
         List<List<int>> triangleList = new List<List<int>>();
-        var indices = graphData.getIndicesList().ToArray();
-        foreach((int, int) (left, right) in indices)
+        List<(int, int)> indices = graphData.getIndicesList();
+        foreach((int, int) tuple in indices)
         {
+            int left = tuple.Item1;
+            int right = tuple.Item2;
             //triangulate the points [left, right)
             int size = right - left;
             int offset = left;
-            Vector3[] someVertices = new int[size];
+            Vector3[] someVertices = new Vector3[size];
             Array.Copy(vertices, left, someVertices, 0, size);
-            triangleList.Add(triangulate(someVertices, offset));
+            triangleList.Add(triangulate(someVertices.ToList(), offset));
         }
 
-        triangles = triangleList.SelectMany(x => x).ToList();
+        triangles = (int[])triangleList.SelectMany(x => x);
         
         // Update the mesh
         Debug.Log("MeshGenerator.cs :: Update mesh variables");
@@ -68,11 +72,11 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         mesh.RecalculateNormals();
 	}
 
-    private int[] triangulate(Vector3[] vertices, int offset)
+    private List<int> triangulate(List<Vector3> vertices, int offset)
     {
         // Turn vertices into float2s for triangulation
-        float2[] points = new float2[vertices.Length];
-        for (int p = 0; p < vertices.Length; p++)
+        float2[] points = new float2[vertices.Count];
+        for (int p = 0; p < vertices.Count; p++)
         {
             points[p] = new(vertices[p].x, vertices[p].z);
         }
@@ -92,6 +96,6 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         int[] outputTriangles = new int[triLength];
         nativeOutputTriangles.CopyTo(outputTriangles);
 
-        return outputTriangles.Select(x => x + offset);
+        return (List<int>)outputTriangles.Select(x => x + offset);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -94,7 +95,7 @@ public class Graph : MonoBehaviour
         return vectorList;
     }
 
-    public List<(int, int)> getIndexList()
+    public List<(int, int)> getIndicesList()
     {
         return indexList;
     }
