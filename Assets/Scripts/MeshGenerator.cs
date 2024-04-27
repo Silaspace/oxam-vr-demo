@@ -12,34 +12,30 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
     private Vector3[] vertices;
     private int[] triangles;
     private Color[] colors;
-    private ParticleSystem.Particle[] cloud;
+
+    void Start () 
+	{
+        var meshFilter = GetComponent<MeshFilter>();
+        mesh = new Mesh();
+        meshFilter.mesh = mesh;
+    }
 
     public void update(Graph graphData)
 	{
-        // Make a new mesh
-        Debug.Log("MeshGenerator.cs :: Initialise Mesh");
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
+        // Clear mesh and particle system
+        Debug.Log("MeshGenerator.cs :: Clear Mesh");
+        mesh.Clear();
 
-        // Update vertices
-        vertices = graphData.getVectorList().ToArray();
-
-        // Get mesh colors
-        Debug.Log("MeshGenerator.cs :: Double color array");
-        colors = graphData.getColors().ToArray();
-
-        // Set up dots
-        Debug.Log("MeshGenerator.cs :: Render datapoints");
-        cloud = new ParticleSystem.Particle[vertices.Length];
-
-        for (int i = 0; i < vertices.Length; ++i)
+        // Don't render if hidden
+        if (!graphData.getVisibility())
         {
-            cloud[i].position = vertices[i];
-            cloud[i].startSize = 0.01f;
-            cloud[i].startColor = colors[i];
+            return;
         }
 
-        GetComponent<ParticleSystem>().SetParticles(cloud, cloud.Length);
+        // Get appropriate data from graph object
+        Debug.Log("MeshGenerator.cs :: Get graph data");
+        vertices = graphData.getVectorList().ToArray();
+        colors = graphData.getColors().ToArray();
 
         // Triangulate Mesh
         Debug.Log("MeshGenerator.cs :: Triangulate mesh");
@@ -74,9 +70,8 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         nativeOutputTriangles.CopyTo(outputTriangles);
         triangles = outputTriangles;
         
-        // Update the mesh
-        Debug.Log("MeshGenerator.cs :: Update mesh variables");
-        mesh.Clear();
+        //  Update
+        Debug.Log("MeshGenerator.cs :: Update");
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.colors = colors;
