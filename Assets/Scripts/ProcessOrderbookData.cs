@@ -129,59 +129,72 @@ public class ProcessOrderbookData
         //z-axis: time
         List<Vector3> positions = new List<Vector3>();
 
-        //TODO current inefficient implementation to test cumulative look
+        //we use [leftIndex, rightIndex) for each triangulation
+        List<(int, int)> indices = new List<(int, int)>();
+        int startIndex = 0;
+
         //for each time value
-        
-        
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in bids)
         {
             //for each price in decreasing order (so it is cumulative)
-            int current = 0;
+            int currentHeight = 0;
             float lowPrice = 0.0f;
+            int currentIndex = startIndex;
             foreach(KeyValuePair<float, int> bid in timePoint.Value.Reverse())
             {
                 float xPos = bid.Key;
                 lowPrice = xPos;
-                current += bid.Value; //increase current by the size of this bid
-                float yPos = current;
+                currentHeight += bid.Value; //increase currentHeight by the size of this bid
+                float yPos = currentHeight;
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                currentIndex += 1;
             }
+
+            //add points to make a straight line on the left
             for (float i = lowPrice - 0.1f; i > minPrice; i -= 0.1f) 
             {
-                positions.Add(new Vector3(i, current, timePoint.Key));
+                positions.Add(new Vector3(i, currentHeight, timePoint.Key));
             }
-            positions.Add(new Vector3(minPrice, current, timePoint.Key));
+            if (lowPrice != minPrice) positions.Add(new Vector3(minPrice, currentHeight, timePoint.Key));
+
+            //add index to indices
+            indices.Add((startIndex, currentIndex));
+            startIndex = currentIndex;
         }
         
-        /*
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
             //for each price in increasing order (so it is cumulative)
-            int current = 0;
+            int currentHeight = 0;
             float highPrice = 0.0f;
+            int currentIndex = startIndex;
             foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
                 float xPos = ask.Key;
                 highPrice = xPos;
-                current += ask.Value; //increase current by the size of this bid
-                float yPos = current;
+                currentHeight += ask.Value; //increase currentHeight by the size of this bid
+                float yPos = currentHeight;
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                currentIndex += 1;
             }
             for (float i = highPrice + 0.1f; i < maxPrice; i+= 0.1f)
             {
-                positions.Add(new Vector3(i, current, timePoint.Key));
+                positions.Add(new Vector3(i, currentHeight, timePoint.Key));
             }
-            positions.Add(new Vector3(maxPrice, current, timePoint.Key));
-        }
-        */
+            positions.Add(new Vector3(maxPrice, currentHeight, timePoint.Key));
 
-        // Remove duplicate point
-        return positions.Distinct(new Vector3EqualityComparer()).ToList();
+            //add index to indices
+            indices.Add((startIndex, currentIndex));
+            startIndex = currentIndex;
+        }
+
+        // Return positions and the indices of the points we must use for each triangulation
+        return (positions, indices);
     }
 }
 

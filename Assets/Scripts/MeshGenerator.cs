@@ -44,6 +44,32 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         // Triangulate Mesh
         Debug.Log("MeshGenerator.cs :: Triangulate mesh");
 
+        //triangulate for each pair of indices
+        List<List<int>> triangleList = new List<List<int>>();
+        var indices = graphData.getIndicesList().ToArray();
+        foreach((int, int) (left, right) in indices)
+        {
+            //triangulate the points [left, right)
+            int size = right - left;
+            int offset = left;
+            Vector3[] someVertices = new int[size];
+            Array.Copy(vertices, left, someVertices, 0, size);
+            triangleList.Add(triangulate(someVertices, offset));
+        }
+
+        triangles = triangleList.SelectMany(x => x).ToList();
+        
+        // Update the mesh
+        Debug.Log("MeshGenerator.cs :: Update mesh variables");
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.colors = colors;
+        mesh.RecalculateNormals();
+	}
+
+    private int[] triangulate(Vector3[] vertices, int offset)
+    {
         // Turn vertices into float2s for triangulation
         float2[] points = new float2[vertices.Length];
         for (int p = 0; p < vertices.Length; p++)
@@ -56,13 +82,6 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         using var triangulator = new Triangulator(capacity: 1024, Allocator.Persistent)
         {
             Input = { Positions = positions },
-            //Settings = {
-            //    RefineMesh = true,
-            //    RefinementThresholds = {
-            //        Area = 1f,
-            //        Angle = math.radians(20f)
-            //    },
-            //}
         };
 
         triangulator.Run();
@@ -72,14 +91,6 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         int triLength = nativeOutputTriangles.Length;
         int[] outputTriangles = new int[triLength];
         nativeOutputTriangles.CopyTo(outputTriangles);
-        triangles = outputTriangles;
-        
-        // Update the mesh
-        Debug.Log("MeshGenerator.cs :: Update mesh variables");
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.colors = colors;
-        mesh.RecalculateNormals();
-	}
+        return outputTriangles;
+    }
 }
