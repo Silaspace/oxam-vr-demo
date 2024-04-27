@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Music PCA Scatter Plot
+  m_text: New Graph
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb3e28b87e9ba534d9c7e8da0d859d5b, type: 2}
   m_sharedMaterial: {fileID: 7032093815205813286, guid: fb3e28b87e9ba534d9c7e8da0d859d5b, type: 2}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 7682365919899417257}
   - component: {fileID: 3097394816540146633}
   - component: {fileID: 7012736320731739503}
-  - component: {fileID: 4842336414311298223}
+  - component: {fileID: 7443646178017736120}
   m_Layer: 0
   m_Name: GraphBoxToggle
   m_TagString: Untagged
@@ -238,8 +238,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4842336414311298223}
-        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+      - m_Target: {fileID: 7443646178017736120}
+        m_TargetAssemblyTypeName: Graph, Assembly-CSharp
         m_MethodName: onPress
         m_Mode: 1
         m_Arguments:
@@ -260,7 +260,7 @@ Animator:
   m_GameObject: {fileID: 7682365919899417258}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 46955690c3a6634408dcff8af6b80e54, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4eec694e05d1dc84eb5bc7468ef709cb, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -271,7 +271,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4842336414311298223
+--- !u!114 &7443646178017736120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,10 +280,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7682365919899417258}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d9480a3de3a4c77ba7025ed13d36b3, type: 3}
+  m_Script: {fileID: 11500000, guid: eb41a57a8c7bb46fab0ab89a2a219f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  graphObject: {fileID: 0}
+  displayName: Music Genre PCA
+  filename: Data/MusicGenrePCA/pca_3d
+  datatype: 0
+  scale: 1
+  position: {x: 0, y: 0, z: 0}
 --- !u!1 &7682365920118445127
 GameObject:
   m_ObjectHideFlags: 0

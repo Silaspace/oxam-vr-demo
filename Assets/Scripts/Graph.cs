@@ -48,7 +48,6 @@ public class Graph : MonoBehaviour
     public GraphColor graphcolor = GraphColor.None;
     public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
-    public bool visibility = false;
 
     // Internal state
     private GraphRenderer graphRenderer;
@@ -73,12 +72,21 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Graph.cs :: Process data in Start");
+        //onPress();
+    }
+
+    void onPress()
+    {
+        Debug.Log("Graph.cs :: Pressed");
+
         getData();
         processData();
         colorGraph();
         scaleData();
         chooseRenderer();
+
+        graphUpdated = true;
+
     }
 
     public List<Vector3> getVectorList()
@@ -94,11 +102,6 @@ public class Graph : MonoBehaviour
     public List<Color> getColors()
     {
         return colorList;
-    }
-
-    public bool getVisibility()
-    {
-        return visibility;
     }
 
     public void updateFile(string newFilename)
@@ -133,13 +136,6 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update datatype attribute");
         graphcolor = newGraphColor;
         colorGraph();
-        graphUpdated = true;
-    }
-
-    public void updateVisibility(bool newVisibility)
-    {
-        Debug.Log("Graph.cs :: Update graph visibility");
-        visibility = newVisibility;
         graphUpdated = true;
     }
 
@@ -182,16 +178,18 @@ public class Graph : MonoBehaviour
 
     private void chooseRenderer()
     {
-        Debug.Log("Graph.cs :: Switch renderer");
+        Debug.Log("Graph.cs :: Process the rawData into a vectorList");
         switch(graphtype) 
         {
         case GraphType.Scatter:
             Debug.Log("Graph.cs :: Locate scatter plot renderer");
-            graphRenderer = GetComponent<ScatterPlot>();
+            var scatterRenderer = GameObject.Find("/Particle System");
+            graphRenderer = scatterRenderer.GetComponent<GraphRenderer>();
             break;
         case GraphType.Mesh:
             Debug.Log("Graph.cs :: Locate mesh generator");
-            graphRenderer = GetComponent<MeshGenerator>();
+            var meshRenderer = GameObject.Find("/Mesh Generator");
+            graphRenderer = meshRenderer.GetComponent<GraphRenderer>();
             break;
         case GraphType.None:
             Debug.Log("Graph.cs :: No Graphtype selected");
