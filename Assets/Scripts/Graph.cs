@@ -72,7 +72,10 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        //onPress();
+        // For debugging, render the pca_3d data without having to press the button.
+        if(filename == "Data/RoyalMailSharePrice/price") {
+            onPress();
+        }
     }
 
     void onPress()
