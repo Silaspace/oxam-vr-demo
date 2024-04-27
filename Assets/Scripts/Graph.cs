@@ -138,6 +138,7 @@ public class Graph : MonoBehaviour
 
     public void updateVisibility(bool newVisibility)
     {
+        Debug.Log("Graph.cs :: Update graph visibility");
         visibility = newVisibility;
         graphUpdated = true;
     }
