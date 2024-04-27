@@ -91,6 +91,7 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         int triLength = nativeOutputTriangles.Length;
         int[] outputTriangles = new int[triLength];
         nativeOutputTriangles.CopyTo(outputTriangles);
-        return outputTriangles;
+
+        return outputTriangles.Select(x => x + offset);
     }
 }
