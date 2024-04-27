@@ -29,14 +29,8 @@ public class ProcessOrderbookData
 {
     public static float convertToUnixTimestamp(string date)
     {
-        DateTime dateTime;
-        if (DateTime.TryParseExact(date, "yyyyMMdd-HHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime)) {
-            DateTime epoch = new DateTime(1970, 1, 1);
-            TimeSpan timeSpan = dateTime - epoch;
-            return (float)timeSpan.TotalSeconds;
-        } else {
-            throw new ArgumentException("Invalid date format " + date);
-        }
+        DateTime dt = DateTime.ParseExact(date, "yyyyMMdd-HHmmss", null);
+        return (float) dt.Minute + 0.3333333f*(dt.Second/20);
     }
 
     public static List<Vector3> process(List<Dictionary<string, object>> pointList)
@@ -44,6 +38,10 @@ public class ProcessOrderbookData
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();
         SortedDictionary<float, SortedDictionary<float, int>> asks = new SortedDictionary<float, SortedDictionary<float, int>>();
+
+        //min and max prices to have flat edges of mesh
+        float minPrice = float.MaxValue;
+        float maxPrice = float.MinValue;
 
         //TODO change the indices being used here when Diane has cleaned data up
         //Get column data
@@ -69,6 +67,10 @@ public class ProcessOrderbookData
                 AskPrice = Convert.ToSingle(pointList[i][askPriceAxisKey]),
                 AskSize = Convert.ToInt16(pointList[i][askSizeAxisKey])
             };
+
+            //update min and max price
+            minPrice = Math.Min(minPrice, entry.BidPrice);
+            maxPrice = Math.Max(maxPrice, entry.AskPrice);
 
             //add ask and bid to each dict
             //dict is used to calculate total size of bids at same time and same price
@@ -130,26 +132,30 @@ public class ProcessOrderbookData
         //TODO current inefficient implementation to test cumulative look
         //for each time value
         
+        
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in bids)
         {
             //for each price in decreasing order (so it is cumulative)
             int current = 0;
-            float lowPrice = 0.0f; //used to add an additional point at the bottom left (testing how this looks)
+            float lowPrice = 0.0f;
             foreach(KeyValuePair<float, int> bid in timePoint.Value.Reverse())
             {
                 float xPos = bid.Key;
+                lowPrice = xPos;
                 current += bid.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
-                lowPrice = xPos;
             }
-            positions.Add(new Vector3(lowPrice+0.001f, 0, timePoint.Key));
+            for (float i = lowPrice - 0.1f; i > minPrice; i -= 0.1f) 
+            {
+                positions.Add(new Vector3(i, current, timePoint.Key));
+            }
+            positions.Add(new Vector3(minPrice, current, timePoint.Key));
         }
         
-
-        
+        /*
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
@@ -159,16 +165,20 @@ public class ProcessOrderbookData
             foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
                 float xPos = ask.Key;
+                highPrice = xPos;
                 current += ask.Value; //increase current by the size of this bid
                 float yPos = current;
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
-                highPrice = xPos;
             }
-            //positions.Add(new Vector3(highPrice-0.001f, 0, timePoint.Key));
+            for (float i = highPrice + 0.1f; i < maxPrice; i+= 0.1f)
+            {
+                positions.Add(new Vector3(i, current, timePoint.Key));
+            }
+            positions.Add(new Vector3(maxPrice, current, timePoint.Key));
         }
-        
+        */
 
         // Remove duplicate point
         return positions.Distinct(new Vector3EqualityComparer()).ToList();
