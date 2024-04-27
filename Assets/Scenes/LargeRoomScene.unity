@@ -10157,17 +10157,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
---- !u!114 &1781401351 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8426503970220105257, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-  m_PrefabInstance: {fileID: 4450469060277933595}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9359eb53d78e84f8e88fb7b4b2e49399, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1794059177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16608,7 +16597,7 @@ PrefabInstance:
     - target: {fileID: 8051477348310702620, guid: 6d0daa33399ecd14bb5adf1b1ea21830, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1781401351}
+      objectReference: {fileID: 0}
     - target: {fileID: 8051477348310702620, guid: 6d0daa33399ecd14bb5adf1b1ea21830, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
@@ -19158,58 +19147,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4668863806745702313, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: scale.x
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: scale.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: scale.z
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: datatype
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: filename
-      value: Data/MusicGenrePCA/pca_3d
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: graphcolor
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: position.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: displayName
-      value: Music PCA Scatter Plot
-      objectReference: {fileID: 0}
-    - target: {fileID: 6800897890186733145, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6800897890186733145, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6800897890186733145, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6800897890186733145, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6800897890186733145, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
