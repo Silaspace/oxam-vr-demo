@@ -12,11 +12,10 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
     private Vector3[] vertices;
     private int[] triangles;
     private Color[] colors;
-    private MeshFilter meshFilter;
 
     void Start () 
 	{
-        meshFilter = GetComponent<MeshFilter>();
+        var meshFilter = GetComponent<MeshFilter>();
         mesh = new Mesh();
         meshFilter.mesh = mesh;
     }
