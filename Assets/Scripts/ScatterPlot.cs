@@ -32,7 +32,7 @@ public class ScatterPlot : MonoBehaviour, GraphRenderer
 		for (int i = 0; i < positions.Count; ++i)
 		{
 			cloud[i].position = positions[i];			
-			cloud[i].startSize = 0.5f;
+			cloud[i].startSize = 0.05f;
 			cloud[i].startColor = colors[i];
 		}
 

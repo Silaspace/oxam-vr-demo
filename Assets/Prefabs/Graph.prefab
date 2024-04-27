@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 347285542508698495}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 2.5}
+  m_LocalPosition: {x: 0, y: 0, z: 2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53,10 +53,10 @@ MonoBehaviour:
   displayName: Music PCA Scatter Plot
   filename: Data/MusicGenrePCA/pca_3d
   graphtype: 0
-  datatype: 2
-  graphcolor: 4
-  scale: {x: 20, y: 20, z: 20}
-  position: {x: 0, y: 1, z: 0}
+  datatype: 1
+  graphcolor: 5
+  scale: {x: 1, y: 1, z: 1}
+  position: {x: 0, y: 0, z: 0}
   visibility: 0
 --- !u!114 &7659985591270081971
 MonoBehaviour:
@@ -110,7 +110,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 2be071479ac2fa34f931ff05c2e9c7d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
