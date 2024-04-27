@@ -53,6 +53,7 @@ public class Graph : MonoBehaviour
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
+    private List<(int, int)> indexList;
     private List<string> labelList;
     private List<Color> colorList;
     private Vector3 vectorMax;
@@ -91,6 +92,11 @@ public class Graph : MonoBehaviour
     public List<Vector3> getVectorList()
     {
         return vectorList;
+    }
+
+    public List<(int, int)> getIndexList()
+    {
+        return indexList;
     }
 
     public List<string> getLabels()
@@ -155,10 +161,10 @@ public class Graph : MonoBehaviour
             (vectorList, labelList) = ProcessScatterData.process(rawData);
             break;
         case DataType.TimeValue:
-            vectorList = ProcessSharePriceData.process(rawData);
+            (vectorList, indexList) = ProcessSharePriceData.process(rawData);
             break;
         case DataType.Orderbooks:
-            vectorList = ProcessOrderbookData.process(rawData);
+            (vectorList, indexList) = ProcessOrderbookData.process(rawData);
             break;
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");
