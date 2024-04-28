@@ -30,7 +30,7 @@ public class ProcessOrderbookData
     public static float convertToUnixTimestamp(string date)
     {
         DateTime dt = DateTime.ParseExact(date, "yyyyMMdd-HHmmss", null);
-        return (float) dt.Minute + 0.3333333f*(dt.Second/20);
+        return (float) dt.Minute + 0.166666f*(dt.Second/10);
     }
 
     public static (List<Vector3>, List<(int, int)>) process(List<Dictionary<string, object>> pointList)
@@ -54,7 +54,7 @@ public class ProcessOrderbookData
         var askSizeAxisKey = columnList[10];
 
         // Get each entry from the points list
-        // Also maintain a dict for prices
+        // Maintain a dict for prices
         for (int i = 1; i < pointList.Count; i++)
         {
             //AskPrice, BidPrice, AskSize, BidSize, AskTime, BidTime
@@ -129,9 +129,13 @@ public class ProcessOrderbookData
         //z-axis: time
         List<Vector3> positions = new List<Vector3>();
 
-        //we use [leftIndex, rightIndex) for each triangulation
+        //we use [leftIndex, currentIndex) for each triangulation
         List<(int, int)> indices = new List<(int, int)>();
         int startIndex = 0;
+        int leftIndex = 0;
+        int leftBorder = 0;
+        int rightBorder = bids.Count;
+        int currentBid = 0;
 
         //for each time value
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in bids)
@@ -155,15 +159,31 @@ public class ProcessOrderbookData
             //add points to make a straight line on the left
             for (float i = lowPrice - 0.1f; i > minPrice; i -= 0.1f) 
             {
+                currentIndex += 1;
                 positions.Add(new Vector3(i, currentHeight, timePoint.Key));
             }
-            if (lowPrice != minPrice) positions.Add(new Vector3(minPrice, currentHeight, timePoint.Key));
 
-            //add index to indices
-            indices.Add((startIndex, currentIndex));
+            //if this isn't the time with the minimum price
+            if (lowPrice != minPrice) 
+            {
+                currentIndex += 1;
+                positions.Add(new Vector3(minPrice, currentHeight, timePoint.Key));
+            }
+
+            //add index pair to indices
+            if (currentBid > leftBorder && currentBid < rightBorder-1) 
+            {
+                indices.Add((leftIndex, currentIndex));
+                leftIndex = startIndex;
+            }
             startIndex = currentIndex;
+            currentBid += 1;
         }
         
+        leftIndex = startIndex;
+        leftBorder = 0;
+        rightBorder = asks.Count;
+        currentBid = 0;
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
@@ -182,14 +202,28 @@ public class ProcessOrderbookData
                 positions.Add(new Vector3(xPos, yPos, zPos));
                 currentIndex += 1;
             }
+
+            //add points to make a straight line on the right
             for (float i = highPrice + 0.1f; i < maxPrice; i+= 0.1f)
             {
+                currentIndex += 1;
                 positions.Add(new Vector3(i, currentHeight, timePoint.Key));
             }
-            positions.Add(new Vector3(maxPrice, currentHeight, timePoint.Key));
+
+            //if this isn't the time with the maximum price
+            if (highPrice != maxPrice) 
+            {
+                currentIndex += 1;
+                positions.Add(new Vector3(maxPrice, currentHeight, timePoint.Key));
+            }
 
             //add index to indices
-            indices.Add((startIndex, currentIndex));
+            if (currentBid > leftBorder && currentBid < rightBorder-1)
+            {
+                indices.Add((leftIndex, currentIndex));
+                leftIndex = startIndex;
+            }
+            currentBid += 1;
             startIndex = currentIndex;
         }
 

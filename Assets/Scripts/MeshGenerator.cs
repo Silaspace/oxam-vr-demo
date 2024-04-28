@@ -47,12 +47,14 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         Debug.Log("MeshGenerator.cs :: Triangulate mesh");
 
         //triangulate for each pair of indices
+        
         List<List<int>> triangleList = new List<List<int>>();
         List<(int, int)> indices = graphData.getIndicesList();
         foreach((int, int) tuple in indices)
         {
             int left = tuple.Item1;
             int right = tuple.Item2;
+            Debug.Log("MeshGenerator.cs :: Triangulate indices " + left + " to " + right);
             //triangulate the points [left, right)
             int size = right - left;
             int offset = left;
@@ -61,7 +63,8 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
             triangleList.Add(triangulate(someVertices.ToList(), offset));
         }
 
-        triangles = (int[])triangleList.SelectMany(x => x);
+        triangles = triangleList.SelectMany(x => x).ToArray();
+        //triangles = triangulate(vertices.ToList(), 0).ToArray();
         
         // Update the mesh
         Debug.Log("MeshGenerator.cs :: Update mesh variables");
@@ -72,13 +75,13 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         mesh.RecalculateNormals();
 	}
 
-    private List<int> triangulate(List<Vector3> vertices, int offset)
+    private List<int> triangulate(List<Vector3> someVertices, int offset)
     {
         // Turn vertices into float2s for triangulation
-        float2[] points = new float2[vertices.Count];
-        for (int p = 0; p < vertices.Count; p++)
+        float2[] points = new float2[someVertices.Count];
+        for (int p = 0; p < someVertices.Count; p++)
         {
-            points[p] = new(vertices[p].x, vertices[p].z);
+            points[p] = new(someVertices[p].x, someVertices[p].z);
         }
 
         // Run Triangulation
@@ -96,6 +99,6 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         int[] outputTriangles = new int[triLength];
         nativeOutputTriangles.CopyTo(outputTriangles);
 
-        return (List<int>)outputTriangles.Select(x => x + offset);
+        return outputTriangles.Select(x => x + offset).ToList();
     }
 }

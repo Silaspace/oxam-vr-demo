@@ -5238,7 +5238,7 @@ MonoBehaviour:
   graphtype: 1
   datatype: 2
   graphcolor: 2
-  scale: 1
+  scale: {x: 1, y: 1, z: 1}
   position: {x: 0, y: 0, z: 0}
 --- !u!4 &2131122026
 Transform:
