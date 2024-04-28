@@ -8,14 +8,7 @@ public class FileDropdown : MonoBehaviour
 {
     // Create the options for the input file dropdown
 
-    void Start(){
-	this.updateOptions();
-    }
-
-    void onBecameVisible(){
-    }
-
-    private void updateOptions(){
+    public void updateOptions(){
 	Debug.Log("FileDropdown.cs :: Making Options");
 	List<string> options = new List<string>();
 	string[] directories = Directory.GetDirectories("Assets/Resources/Data","*");
@@ -27,7 +20,7 @@ public class FileDropdown : MonoBehaviour
 	}
 	TMP_Dropdown dropdown = GetComponent<TMP_Dropdown>();
 	if (dropdown == null) {
-	    Debug.Log("Dropdown wasn't returned");
+	    Debug.Log("FileDropdown.cs :: Dropdown wasn't returned");
 	}
 	dropdown.ClearOptions();
 	dropdown.AddOptions(options);

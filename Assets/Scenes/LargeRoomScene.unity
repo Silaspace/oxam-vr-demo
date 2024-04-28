@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4422244, g: 0.45032644, b: 0.4740912, a: 1}
+  m_IndirectSpecularColor: {r: 0.44202754, g: 0.4502226, b: 0.47379634, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1285,6 +1285,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 347285542508698495, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
   m_PrefabInstance: {fileID: 4450469060277933595}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &216114169 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5469880009452361474, guid: 0b95e9ade761e43e7bc320c4dc21c7b5, type: 3}
+  m_PrefabInstance: {fileID: 4450469060277933595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 216114162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb41a57a8c7bb46fab0ab89a2a219f32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &223584957
 GameObject:
   m_ObjectHideFlags: 0
@@ -2205,13 +2216,27 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: Unset
+      m_Image: {fileID: 0}
     - m_Text: Scatter Plot
       m_Image: {fileID: 0}
     - m_Text: 3D Mesh
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1702339527}
+        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+        m_MethodName: changeGraphType
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &527043636
 MonoBehaviour:
@@ -2564,13 +2589,29 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: Unset
+      m_Image: {fileID: 0}
     - m_Text: 3D Points
       m_Image: {fileID: 0}
     - m_Text: Orderbook Data
       m_Image: {fileID: 0}
+    - m_Text: Time Values
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1702339527}
+        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+        m_MethodName: changeDatatype
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &600601641
 MonoBehaviour:
@@ -3454,7 +3495,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1702339527}
+        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+        m_MethodName: changeFile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &775528159
 MonoBehaviour:
@@ -3893,6 +3946,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e83b98f307b23134cb70af602abce29d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &868985203 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+  m_PrefabInstance: {fileID: 755593941}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &871034943
@@ -4450,13 +4514,35 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Colour 1
+    - m_Text: Unset
       m_Image: {fileID: 0}
-    - m_Text: Colour 2
+    - m_Text: Magma
+      m_Image: {fileID: 0}
+    - m_Text: Inferno
+      m_Image: {fileID: 0}
+    - m_Text: Plasma
+      m_Image: {fileID: 0}
+    - m_Text: Viridic
+      m_Image: {fileID: 0}
+    - m_Text: Static
+      m_Image: {fileID: 0}
+    - m_Text: By Label
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1702339527}
+        m_TargetAssemblyTypeName: Settings, Assembly-CSharp
+        m_MethodName: changeColour
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &999463471
 MonoBehaviour:
@@ -4553,7 +4639,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Colour 1
+  m_text: Unset
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8293,7 +8379,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4820298705798557963, guid: 24227e8b02b65ba40923c6f411c841bf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 755593942}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3670086197819780062, guid: 24227e8b02b65ba40923c6f411c841bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1702339527}
   m_SourcePrefab: {fileID: 100100000, guid: 24227e8b02b65ba40923c6f411c841bf, type: 3}
 --- !u!224 &1092136418 stripped
 RectTransform:
@@ -10054,6 +10143,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1689751366}
   m_CullTransparentMesh: 1
+--- !u!1 &1702339526 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3670086197819780062, guid: 24227e8b02b65ba40923c6f411c841bf, type: 3}
+  m_PrefabInstance: {fileID: 1092136417}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1702339527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702339526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e321ca43b14059480af30f52a1e38ed1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graph: {fileID: 216114169}
+  fileDropdown: {fileID: 775528158}
+  fileDropdownScript: {fileID: 775528157}
+  dataTypeDropdown: {fileID: 600601640}
+  graphTypeDropdown: {fileID: 527043635}
+  colourDropdown: {fileID: 999463470}
+  visibilityToggle: {fileID: 1911412947}
+  deleteToggle: {fileID: 868985203}
 --- !u!224 &1707684142 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3670086198966742180, guid: 24227e8b02b65ba40923c6f411c841bf, type: 3}
@@ -10797,7 +10911,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Scatter Plot
+  m_text: Unset
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -17793,6 +17907,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Visibility Toggle
       objectReference: {fileID: 0}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1702339527}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: changeVisibility
+      objectReference: {fileID: 0}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Settings, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 775873854086117998, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -17827,6 +17969,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 775873853866972289, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
   m_PrefabInstance: {fileID: 1911412943}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1911412947 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 775873853866972292, guid: fb12961b98d40ad4c9a2fb064dc0cbd8, type: 3}
+  m_PrefabInstance: {fileID: 1911412943}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1925364325
 GameObject:
   m_ObjectHideFlags: 0
@@ -17884,7 +18037,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3D Points
+  m_text: Unset
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
