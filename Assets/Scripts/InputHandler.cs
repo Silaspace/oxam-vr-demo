@@ -18,11 +18,11 @@ public class InputHandler : MonoBehaviour
         // graphScript.updateVisibility(
         //    graphScript.getVisibility() ? false : true);
 
-	Debug.Log("InputHandler.cs :: Changing the currently selected graph");
-	settings.changeGraph(gameObject, graphObject);
+        Debug.Log("InputHandler.cs :: Changing the currently selected graph");
+        settings.changeGraph(gameObject, graphObject);
 
-	Debug.Log("InputHandler.cs :: Change the page to show settings");
-	scrollManager.SetPageIndex(1);
+        Debug.Log("InputHandler.cs :: Change the page to show settings");
+        scrollManager.SetPageIndex(1);
     }
 
     public void setGraph(GameObject newGraph){

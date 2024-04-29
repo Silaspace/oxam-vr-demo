@@ -28,8 +28,8 @@ public class AddGraph : MonoBehaviour
 
         Debug.Log("AddGraph.cs :: Link tile to Graph, settings and scroll manager");
         InputHandler inputHandler = newTile.GetComponent<InputHandler>();
-	inputHandler.setGraph(newGraph);
-	inputHandler.settings = settings;
-	inputHandler.scrollManager = scrollManager;
+        inputHandler.setGraph(newGraph);
+        inputHandler.settings = settings;
+        inputHandler.scrollManager = scrollManager;
     }
 }
