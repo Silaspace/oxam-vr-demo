@@ -21,13 +21,20 @@ public class Settings : MonoBehaviour
     // Scroll Manager, to scroll back to the main graph menu
     public PageScroll scrollManager;
 
+    // Graph and Tile gameobjects, to delete
+    public GameObject graphTile;
+    public GameObject graphObject;
+
     void Start()
     {
-	changeGraph(graph);
+	changeGraph(graphTile, graphObject);
     }
 
-    public void changeGraph(Graph newGraph)
+    public void changeGraph(GameObject newTile, GameObject newGraphObject)
     {
+	graphTile = newTile;
+	graphObject = newGraphObject;
+	Graph newGraph = newGraphObject.GetComponent<Graph>();
 	graph = newGraph;
 	Debug.Log("Settings.cs :: New graph has been selected");
 	fileDropdownScript.updateOptions();
@@ -213,6 +220,17 @@ public class Settings : MonoBehaviour
 	else
 	{
 	    Debug.Log("Settings.cs :: Visibility didn't change");
+	}
+    }
+
+    public void deleteGraph()
+    {
+	if(deleteToggle.isOn)
+	{
+	    Debug.Log("Settings.cs :: Deleting Graph");
+	    Destroy(graphObject);
+	    Destroy(graphTile);
+	    scrollManager.SetPageIndex(0);
 	}
     }
 

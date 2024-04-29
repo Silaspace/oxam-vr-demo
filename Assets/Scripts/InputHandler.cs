@@ -19,7 +19,7 @@ public class InputHandler : MonoBehaviour
         //    graphScript.getVisibility() ? false : true);
 
 	Debug.Log("InputHandler.cs :: Changing the currently selected graph");
-	settings.changeGraph(graphScript);
+	settings.changeGraph(gameObject, graphObject);
 
 	Debug.Log("InputHandler.cs :: Change the page to show settings");
 	scrollManager.SetPageIndex(1);
