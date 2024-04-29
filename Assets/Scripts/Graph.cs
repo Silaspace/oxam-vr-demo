@@ -101,6 +101,11 @@ public class Graph : MonoBehaviour
         return visibility;
     }
 
+    public Vector3 getScale()
+    {
+        return scale;
+    }
+
     public void updateFile(string newFilename)
     {
         Debug.Log("Graph.cs :: Update filename attribute");
