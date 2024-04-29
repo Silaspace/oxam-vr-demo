@@ -18,7 +18,7 @@ public class AddGraph : MonoBehaviour
         Debug.Log("AddGraph.cs :: Instantiate a new Graph");
         GameObject newGraph = Instantiate(
             graphPrefab,
-            new Vector3(0, 0, 0),
+            new Vector3(0, 0, 2.5f),
             Quaternion.identity);
 
         Debug.Log("AddGraph.cs :: Set tile parent");
