@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,13 +14,12 @@ public class FileDropdown : MonoBehaviour
 		Debug.Log("FileDropdown.cs :: Get metadata of the datasets available");
 		var metaData = CSVReader.Read("Data/_data");
 
-        // Loop through pointList extract the data
         Debug.Log("FileDropdown.cs :: Extract name,path data");
 		List<string> options = new List<string>();
-
-        for (var i = 0; i < pointList.Count; i++)
+        for (var i = 0; i < metaData.Count; i++)
         {   
-			options.Add(pointList[i]["Path"]);
+			options.Add(
+				Convert.ToString(metaData[i]["Path"]));
         }
 
 		Debug.Log("FileDropdown.cs :: Update dropdown");
@@ -28,9 +28,11 @@ public class FileDropdown : MonoBehaviour
 		if (dropdown == null) {
 			Debug.Log("FileDropdown.cs :: Dropdown wasn't returned");
 		}
-
-		dropdown.ClearOptions();
-		dropdown.AddOptions(options);
+		else
+		{
+			dropdown.ClearOptions();
+			dropdown.AddOptions(options);
+		}
     }
     
 }
