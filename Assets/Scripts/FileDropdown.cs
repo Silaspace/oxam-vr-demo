@@ -8,24 +8,29 @@ public class FileDropdown : MonoBehaviour
 {
     // Create the options for the input file dropdown
 
-    public void updateOptions(){
-	Debug.Log("FileDropdown.cs :: Making Options");
-	List<string> options = new List<string>();
-	string[] directories = Directory.GetDirectories("Assets/Resources/Data","*");
-	foreach (string directory in directories) {
-	    string[] files = Directory.GetFiles(directory, "*.csv");
-	    foreach (string file in files) {
-		options.Add(file.Substring(22));
-	    }
-	}
-	TMP_Dropdown dropdown = GetComponent<TMP_Dropdown>();
-	if (dropdown == null) {
-	    Debug.Log("FileDropdown.cs :: Dropdown wasn't returned");
-	}
-	dropdown.ClearOptions();
-	dropdown.AddOptions(options);
-	Debug.Log("FileDropdown.cs :: Options Made");
-	
+    public void updateOptions()
+	{
+		Debug.Log("FileDropdown.cs :: Get metadata of the datasets available");
+		var metaData = CSVReader.Read("Data/_data");
+
+        // Loop through pointList extract the data
+        Debug.Log("FileDropdown.cs :: Extract name,path data");
+		List<string> options = new List<string>();
+
+        for (var i = 0; i < pointList.Count; i++)
+        {   
+			options.Add(pointList[i]["Path"]);
+        }
+
+		Debug.Log("FileDropdown.cs :: Update dropdown");
+		TMP_Dropdown dropdown = GetComponent<TMP_Dropdown>();
+
+		if (dropdown == null) {
+			Debug.Log("FileDropdown.cs :: Dropdown wasn't returned");
+		}
+
+		dropdown.ClearOptions();
+		dropdown.AddOptions(options);
     }
     
 }
