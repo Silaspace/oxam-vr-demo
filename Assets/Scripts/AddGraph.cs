@@ -7,6 +7,8 @@ public class AddGraph : MonoBehaviour
     public GameObject tileContainer;
     public GameObject tilePrefab;
     public GameObject graphPrefab;
+    public Settings settings;
+    public PageScroll scrollManager;
 
     public void onPress(){
         Debug.Log("AddGraph.cs :: Instantiate a new tile");
@@ -24,7 +26,10 @@ public class AddGraph : MonoBehaviour
         Debug.Log("AddGraph.cs :: Set tile parent");
         newTile.transform.SetParent(tileContainer.transform, false);
 
-        Debug.Log("AddGraph.cs :: Link tile to Graph");
-        newTile.GetComponent<InputHandler>().setGraph(newGraph);
+        Debug.Log("AddGraph.cs :: Link tile to Graph, settings and scroll manager");
+        InputHandler inputHandler = newTile.GetComponent<InputHandler>();
+	inputHandler.setGraph(newGraph);
+	inputHandler.settings = settings;
+	inputHandler.scrollManager = scrollManager;
     }
 }

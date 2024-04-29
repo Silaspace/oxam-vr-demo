@@ -18,6 +18,9 @@ public class Settings : MonoBehaviour
     public Toggle visibilityToggle;
     public Toggle deleteToggle;
 
+    // Scroll Manager, to scroll back to the main graph menu
+    public PageScroll scrollManager;
+
     void Start()
     {
 	changeGraph(graph);
@@ -211,6 +214,11 @@ public class Settings : MonoBehaviour
 	{
 	    Debug.Log("Settings.cs :: Visibility didn't change");
 	}
+    }
+
+    public void backButton()
+    {
+	scrollManager.SetPageIndex(0);
     }
     
 }
