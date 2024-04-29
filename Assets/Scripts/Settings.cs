@@ -39,20 +39,8 @@ public class Settings : MonoBehaviour
 		Debug.Log("Settings.cs :: New graph has been selected");
 		fileDropdownScript.updateOptions();
 
-		Debug.Log("Settings.cs :: graph filename is " + graph.filename.Substring(5) + ".csv");
-		int index = fileDropdown.options.FindIndex(option => option.text == graph.filename.Substring(5) + ".csv");
-
-		if(index != -1)
-		{
-			Debug.Log("Settings.cs :: File option exists: setting dropdown to it, index is " + index);
-			fileDropdown.value = index;
-		}
-		else
-		{
-			Debug.Log("Settings.cs :: File option doesn't exist: creating new option");
-			fileDropdown.AddOptions(new List<string> {"Deleted File"});
-			fileDropdown.value = fileDropdown.options.Count - 1;
-		}
+		Debug.Log("Settings.cs :: graph filename is " + graph.filename);
+		fileDropdownScript.setIndexFromFilename(graph.filename);
 
 		switch(graph.datatype)
 		{
@@ -113,16 +101,15 @@ public class Settings : MonoBehaviour
 
     public void changeFile()
     {
-		string fileName = "Data/" + fileDropdown.options[fileDropdown.value].text;
-		if(fileName != "Data/Deleted File" && fileName != graph.filename + ".csv")
+		string fileName = fileDropdownScript.getFileName();
+		if(fileName != null && fileName != graph.filename)
 		{
-			fileName.Remove(fileName.Length - 4);
 			Debug.Log("Settings.cs :: Setting file name to " + fileName);
 			graph.updateFile(fileName);
 		}
 		else
 		{
-			Debug.Log("Settings.cs :: File name hasn't changed, doing nothing");
+			Debug.Log("Settings.cs :: File name hasn't changed or is null, doing nothing");
 		}
     }
 
