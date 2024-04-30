@@ -51,6 +51,7 @@ public class Graph : MonoBehaviour
 
     // Internal state
     private GraphRenderer graphRenderer;
+    private GraphRenderer axisRenderer;
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
@@ -59,7 +60,6 @@ public class Graph : MonoBehaviour
     private Vector3 vectorMax;
     private Vector3 vectorMin;
     private bool graphUpdated;
-    private bool axisRenderer;
 
 
     void Update() 
@@ -67,6 +67,7 @@ public class Graph : MonoBehaviour
 		if (graphUpdated)
 		{
             graphRenderer.update(this);
+            axisRenderer.update(this)
             graphUpdated = false;
 		}
 	}
