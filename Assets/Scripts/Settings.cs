@@ -57,6 +57,7 @@ public class Settings : MonoBehaviour
 				dataTypeDropdown.value = 3;
 				break;
 		}
+		
 		switch(graph.graphtype)
 		{
 			case GraphType.None:
