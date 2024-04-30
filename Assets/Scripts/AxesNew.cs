@@ -3,89 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class AxesNew : MonoBehaviour
+public class AxesNew : MonoBehaviour, GraphRenderer
 {
+    // Public properties
     public string xAxisLabel = "X axis";
     public string yAxisLabel = "Y axis";
     public string zAxisLabel = "Z axis";
-
     public bool bidirectional = false;
+    public GameObject linePrefab;
 
-    private GameObject xAxisObject;
-    private GameObject yAxisObject;
-    private GameObject zAxisObject;
-
+    // Private properties
+    private GameObject xAxis;
+    private GameObject yAxis;
+    private GameObject zAxis;
     private TextMeshPro xAxisTextMesh;
     private TextMeshPro yAxisTextMesh;
     private TextMeshPro zAxisTextMesh;
-
     private LineRenderer xAxisLine;
     private LineRenderer yAxisLine;
     private LineRenderer zAxisLine;
 
-    private static Vector3[] unidirectionalPositions = new Vector3[]
-    {
-        new Vector3(0, 0, 0),
-        new Vector3(1, 0, 0),
-        new Vector3(0.93f, 0.07f, 0),
-        new Vector3(1, 0, 0),
-        new Vector3(0.93f, -0.07f, 0)
-    };
-
-    private static Vector3[] bidirectionalPositions = new Vector3[]
-    {
-        new Vector3(0, 0, 0),
-        new Vector3(1, 0, 0),
-        new Vector3(0.93f, 0.07f, 0),
-        new Vector3(1, 0, 0),
-        new Vector3(0.93f, -0.07f, 0),
-        new Vector3(1, 0, 0),
-        new Vector3(-1, 0, 0),
-        new Vector3(-0.93f, -0.07f, 0),
-        new Vector3(-1, 0, 0),
-        new Vector3(-0.93f, 0.07f, 0)
-    };
+    private (Vector3, Vector3) positions;
+    private bool updated = false;
 
     void Start()
     {
-        Debug.Log("AxesNew");
+        Debug.Log("AxesNew.cs :: Instantiate Lines");
 
-        xAxisObject = GameObject.Find("Axis (X)/Label");
-        xAxisTextMesh = xAxisObject.GetComponent<TextMeshPro>();
-        xAxisLine = GameObject.Find("Axis (X)/Line").GetComponent<LineRenderer>();
+        xAxis = Instantiate(
+            linePrefab,
+            new Vector3(0, 0, 0),
+            Quaternion.identity);
 
-        yAxisObject = GameObject.Find("Axis (Y)/Label");
-        yAxisTextMesh = yAxisObject.GetComponent<TextMeshPro>();
-        yAxisLine = GameObject.Find("Axis (Y)/Line").GetComponent<LineRenderer>();
-
-        zAxisObject = GameObject.Find("Axis (Z)/Label");
-        zAxisTextMesh = zAxisObject.GetComponent<TextMeshPro>();
-        zAxisLine = GameObject.Find("Axis (Z)/Line").GetComponent<LineRenderer>();
-    }
-
-    void SetLabels(string x, string y, string z)
-    {
-        xAxisTextMesh.text = x;
-        yAxisTextMesh.text = y;
-        zAxisTextMesh.text = z;
-    }
-
-    void setPositions(Vector3[] positions) {
-        xAxisLine.SetPositions(positions);
-        yAxisLine.SetPositions(positions);
-        zAxisLine.SetPositions(positions);
+        // Set Parent
+        xAxis.transform.SetParent(gameObject.transform, false);
+        //xAxisTextMesh = xAxisObject.GetComponent<TextMeshPro>();
+        xAxisLine = xAxis.GetComponent<LineRenderer>();
     }
 
     void Update()
     {
-        SetLabels(xAxisLabel, yAxisLabel, zAxisLabel);
-
-        if (bidirectional)
+        if (updated)
         {
-            setPositions(bidirectionalPositions);
-        } else
-        {
-            setPositions(unidirectionalPositions);
+            xAxisLine.SetPositions(positions);
         }
+    }
+
+    void update(Graph graphData)
+    {
+        //var scale = graphData.getScale();
+        //var position = graphData.getPosition();
+        var scale = new Vector3(1, 1, 1);
+        var startPosition = new Vector3(0, 0.5, 0);
+
+        var endPosition = Vector3.Scale(startPosition, scale);
+        positions = (startPosition, endPosition);
+
+        updated = true;
     }
 }
