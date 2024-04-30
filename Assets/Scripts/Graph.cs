@@ -67,7 +67,7 @@ public class Graph : MonoBehaviour
 		if (graphUpdated)
 		{
             graphRenderer.update(this);
-            axisRenderer.update(this)
+            axisRenderer.update(this);
             graphUpdated = false;
 		}
 	}
