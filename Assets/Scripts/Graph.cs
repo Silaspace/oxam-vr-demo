@@ -59,6 +59,7 @@ public class Graph : MonoBehaviour
     private Vector3 vectorMax;
     private Vector3 vectorMin;
     private bool graphUpdated;
+    private bool axisRenderer;
 
 
     void Update() 
@@ -72,10 +73,15 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        // For debugging, render the pca_3d data without having to press the button.
+        /* For debugging, render the pca_3d data without having to press the button.
         if(filename == "Data/RoyalMailSharePrice/price") {
             onPress();
         }
+        */
+
+        Debug.Log("Graph.cs :: Axis Rendering");
+        var axisRendererObject = GameObject.Find("/Axes");
+        axisRenderer = axisRendererObject.GetComponent<GraphRenderer>();
     }
 
     void onPress()
