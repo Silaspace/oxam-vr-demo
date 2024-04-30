@@ -14,16 +14,9 @@ public class AxesNew : MonoBehaviour, GraphRenderer
 
     // Private properties
     private GameObject xAxis;
-    private GameObject yAxis;
-    private GameObject zAxis;
-    private TextMeshPro xAxisTextMesh;
-    private TextMeshPro yAxisTextMesh;
-    private TextMeshPro zAxisTextMesh;
     private LineRenderer xAxisLine;
-    private LineRenderer yAxisLine;
-    private LineRenderer zAxisLine;
 
-    private (Vector3, Vector3) positions;
+    private (Vector3[], Vector3[], Vector3[]) positions;
     private bool updated = false;
 
     void Start()
@@ -35,9 +28,8 @@ public class AxesNew : MonoBehaviour, GraphRenderer
             new Vector3(0, 0, 0),
             Quaternion.identity);
 
-        // Set Parent
+        // Set Parent and get line renderer
         xAxis.transform.SetParent(gameObject.transform, false);
-        //xAxisTextMesh = xAxisObject.GetComponent<TextMeshPro>();
         xAxisLine = xAxis.GetComponent<LineRenderer>();
     }
 
@@ -45,19 +37,24 @@ public class AxesNew : MonoBehaviour, GraphRenderer
     {
         if (updated)
         {
-            xAxisLine.SetPositions(positions);
+            (var xPos, var yPos, var zPos) = positions;
+            xAxisLine.SetPositions(xPos);
         }
     }
 
-    void update(Graph graphData)
+    public void update(Graph graphData)
     {
-        //var scale = graphData.getScale();
-        //var position = graphData.getPosition();
-        var scale = new Vector3(1, 1, 1);
-        var startPosition = new Vector3(0, 0.5, 0);
+        //(Vector3 min, Vector3 max) = graphData.getMinMax();
+        //Vector3 position = graphData.getPosition();
+        Vector3 startPosition = new Vector3(0, 0, 0);
+        (Vector3 min, Vector3 max) = (new Vector3(0, 0, 0), new Vector3(1, 1, 1));
 
-        var endPosition = Vector3.Scale(startPosition, scale);
-        positions = (startPosition, endPosition);
+        Vector3 length = max-min;
+
+        positions = (
+            new [] {startPosition, startPosition + new Vector3(length.x, 0, 0)},
+            new [] {startPosition, startPosition + new Vector3(0, length.y, 0)},
+            new [] {startPosition, startPosition + new Vector3(0, 0, length.z)});
 
         updated = true;
     }

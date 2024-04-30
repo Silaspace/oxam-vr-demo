@@ -28335,26 +28335,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 946834940}
     m_Modifications:
-    - target: {fileID: 2225892527947068305, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
-      propertyPath: m_UseWorldSpace
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2225892527947068305, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
-      propertyPath: m_Parameters.alignment
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2225892527947068305, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 2225892527947068305, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2225892527947068305, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.10317427
-      objectReference: {fileID: 0}
     - target: {fileID: 5758163102684321559, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
       propertyPath: m_Name
       value: Line

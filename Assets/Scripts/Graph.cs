@@ -106,6 +106,10 @@ public class Graph : MonoBehaviour
     {
         return colorList;
     }
+    public (Vector3, Vector3) getMinMax()
+    {
+        return (vectorMin, vectorMax);
+    }
 
     public void updateFile(string newFilename)
     {
