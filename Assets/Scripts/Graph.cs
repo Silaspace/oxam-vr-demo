@@ -25,6 +25,7 @@ public enum GraphColor
     Plasma,
     Viridis,
     Static,
+    ByLabel,
     None
 }
 
@@ -48,9 +49,12 @@ public class Graph : MonoBehaviour
     public GraphColor graphcolor = GraphColor.None;
     public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
+    public bool visibility = false;
+    public bool showAxis = false;
 
     // Internal state
     private GraphRenderer graphRenderer;
+    private GraphRenderer axisRenderer;
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
@@ -59,6 +63,8 @@ public class Graph : MonoBehaviour
     private List<Color> colorList;
     private Vector3 vectorMax;
     private Vector3 vectorMin;
+    private Vector3 vectorScaledMax;
+    private Vector3 vectorScaledMin;
     private bool graphUpdated;
 
 
@@ -67,6 +73,7 @@ public class Graph : MonoBehaviour
 		if (graphUpdated)
 		{
             graphRenderer.update(this);
+            axisRenderer.update(this);
             graphUpdated = false;
 		}
 	}
@@ -86,8 +93,7 @@ public class Graph : MonoBehaviour
         scaleData();
         chooseRenderer();
 
-        graphUpdated = true;
-
+        axisRenderer = GetComponent<Axes>();
     }
 
     public List<Vector3> getVectorList()
@@ -108,6 +114,26 @@ public class Graph : MonoBehaviour
     public List<Color> getColors()
     {
         return colorList;
+    }
+
+    public bool getVisibility()
+    {
+        return visibility;
+    }
+
+    public Vector3 getScale()
+    {
+        return scale;
+    }
+
+    public Vector3 getPosition()
+    {
+        return position;
+    }
+
+    public (Vector3, Vector3) getMinMax()
+    {
+        return (vectorScaledMin, vectorScaledMax);
     }
 
     public void updateFile(string newFilename)
@@ -142,6 +168,13 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update datatype attribute");
         graphcolor = newGraphColor;
         colorGraph();
+        graphUpdated = true;
+    }
+
+    public void updateVisibility(bool newVisibility)
+    {
+        Debug.Log("Graph.cs :: Update graph visibility");
+        visibility = newVisibility;
         graphUpdated = true;
     }
 
@@ -184,18 +217,16 @@ public class Graph : MonoBehaviour
 
     private void chooseRenderer()
     {
-        Debug.Log("Graph.cs :: Process the rawData into a vectorList");
+        Debug.Log("Graph.cs :: Switch renderer");
         switch(graphtype) 
         {
         case GraphType.Scatter:
             Debug.Log("Graph.cs :: Locate scatter plot renderer");
-            var scatterRenderer = GameObject.Find("/Particle System");
-            graphRenderer = scatterRenderer.GetComponent<GraphRenderer>();
+            graphRenderer = GetComponent<ScatterPlot>();
             break;
         case GraphType.Mesh:
             Debug.Log("Graph.cs :: Locate mesh generator");
-            var meshRenderer = GameObject.Find("/Mesh Generator");
-            graphRenderer = meshRenderer.GetComponent<GraphRenderer>();
+            graphRenderer = GetComponent<MeshGenerator>();
             break;
         case GraphType.None:
             Debug.Log("Graph.cs :: No Graphtype selected");
@@ -230,6 +261,25 @@ public class Graph : MonoBehaviour
                 colorList.Add(Color.red);
             }
             break;
+        case GraphColor.ByLabel:
+            Dictionary<string, Color> labelColors = new Dictionary<string, Color>();
+
+            for (int i = 0; i < vectorList.Count; i += 1)
+            {
+                string label = labelList[i];
+
+                if (labelColors.ContainsKey(label))
+                {
+                    colorList.Add(labelColors[label]);
+                }
+                else
+                {
+                    Color newColor = CustomColors.GetLabelColor(label);
+                    labelColors[label] = newColor;
+                    colorList.Add(newColor);
+                }
+            }
+            break;
         case GraphColor.None:
             Debug.Log("Graph.cs :: No color selected");
             break;
@@ -238,18 +288,20 @@ public class Graph : MonoBehaviour
 
     private void scaleData()
     {
-        // Proposed Parameters
-        float xSize = 1.5f;
-        float ySize = 0.5f;
-        float zSize = 1.5f;
+        vectorScaledMax = position;
+        vectorScaledMin = vectorScaledMax;
 
         for (int i = 0; i < vectorList.Count; i++)
         {
             var vector = vectorList[i];
-            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -xSize, xSize);
-            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, ySize);
-            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -zSize, zSize);
-            vectorList[i] = Vector3.Scale(vector + position, scale);
+            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -1, 1);
+            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
+            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
+            vectorList[i] = Vector3.Scale(vector, scale) + position;
+
+            // Set scaledMin and scaledMax
+            vectorScaledMax = Vector3.Max(vectorScaledMax, vectorList[i]);
+            vectorScaledMin = Vector3.Min(vectorScaledMin, vectorList[i]);
         }
     }
 
