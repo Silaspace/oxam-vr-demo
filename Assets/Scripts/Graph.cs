@@ -49,9 +49,11 @@ public class Graph : MonoBehaviour
     public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
     public bool visibility = false;
+    public bool showAxis = false;
 
     // Internal state
     private GraphRenderer graphRenderer;
+    private GraphRenderer axisRenderer;
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
@@ -59,6 +61,8 @@ public class Graph : MonoBehaviour
     private List<Color> colorList;
     private Vector3 vectorMax;
     private Vector3 vectorMin;
+    private Vector3 vectorScaledMax;
+    private Vector3 vectorScaledMin;
     private bool graphUpdated;
 
 
@@ -67,6 +71,7 @@ public class Graph : MonoBehaviour
 		if (graphUpdated)
 		{
             graphRenderer.update(this);
+            axisRenderer.update(this);
             graphUpdated = false;
 		}
 	}
@@ -79,6 +84,8 @@ public class Graph : MonoBehaviour
         colorGraph();
         scaleData();
         chooseRenderer();
+
+        axisRenderer = GetComponent<Axes>();
     }
 
     public List<Vector3> getVectorList()
@@ -104,6 +111,16 @@ public class Graph : MonoBehaviour
     public Vector3 getScale()
     {
         return scale;
+    }
+
+    public Vector3 getPosition()
+    {
+        return position;
+    }
+
+    public (Vector3, Vector3) getMinMax()
+    {
+        return (vectorScaledMin, vectorScaledMax);
     }
 
     public void updateFile(string newFilename)
@@ -258,6 +275,9 @@ public class Graph : MonoBehaviour
 
     private void scaleData()
     {
+        vectorScaledMax = position;
+        vectorScaledMin = vectorScaledMax;
+
         for (int i = 0; i < vectorList.Count; i++)
         {
             var vector = vectorList[i];
@@ -265,6 +285,10 @@ public class Graph : MonoBehaviour
             vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
             vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
             vectorList[i] = Vector3.Scale(vector, scale) + position;
+
+            // Set scaledMin and scaledMax
+            vectorScaledMax = Vector3.Max(vectorScaledMax, vectorList[i]);
+            vectorScaledMin = Vector3.Min(vectorScaledMin, vectorList[i]);
         }
     }
 
