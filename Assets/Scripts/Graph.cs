@@ -49,9 +49,11 @@ public class Graph : MonoBehaviour
     public Vector3 scale = new Vector3(1, 1, 1);
     public Vector3 position = new Vector3(0, 0, 0);
     public bool visibility = false;
+    public bool showAxis = false;
 
     // Internal state
     private GraphRenderer graphRenderer;
+    private GraphRenderer axisRenderer;
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
@@ -67,6 +69,7 @@ public class Graph : MonoBehaviour
 		if (graphUpdated)
 		{
             graphRenderer.update(this);
+            axisRenderer.update(this);
             graphUpdated = false;
 		}
 	}
@@ -79,6 +82,8 @@ public class Graph : MonoBehaviour
         colorGraph();
         scaleData();
         chooseRenderer();
+
+        axisRenderer = GetComponent<Axes>();
     }
 
     public List<Vector3> getVectorList()
@@ -104,6 +109,16 @@ public class Graph : MonoBehaviour
     public Vector3 getScale()
     {
         return scale;
+    }
+
+    public Vector3 getPosition()
+    {
+        return position;
+    }
+
+    public (Vector3, Vector3) getMinMax()
+    {
+        return (vectorMin, vectorMax);
     }
 
     public void updateFile(string newFilename)
