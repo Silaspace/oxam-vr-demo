@@ -61,6 +61,8 @@ public class Graph : MonoBehaviour
     private List<Color> colorList;
     private Vector3 vectorMax;
     private Vector3 vectorMin;
+    private Vector3 vectorScaledMax;
+    private Vector3 vectorScaledMin;
     private bool graphUpdated;
 
 
@@ -118,7 +120,7 @@ public class Graph : MonoBehaviour
 
     public (Vector3, Vector3) getMinMax()
     {
-        return (vectorMin, vectorMax);
+        return (vectorScaledMin, vectorScaledMax);
     }
 
     public void updateFile(string newFilename)
@@ -273,6 +275,9 @@ public class Graph : MonoBehaviour
 
     private void scaleData()
     {
+        vectorScaledMax = position;
+        vectorScaledMin = vectorScaledMax;
+
         for (int i = 0; i < vectorList.Count; i++)
         {
             var vector = vectorList[i];
@@ -280,6 +285,10 @@ public class Graph : MonoBehaviour
             vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
             vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
             vectorList[i] = Vector3.Scale(vector, scale) + position;
+
+            // Set scaledMin and scaledMax
+            vectorScaledMax = Vector3.Max(vectorScaledMax, vectorList[i]);
+            vectorScaledMin = Vector3.Min(vectorScaledMin, vectorList[i]);
         }
     }
 

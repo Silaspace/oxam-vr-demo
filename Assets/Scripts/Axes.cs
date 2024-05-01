@@ -18,7 +18,7 @@ public class Axes : MonoBehaviour, GraphRenderer
 
     void Start()
     {
-        Debug.Log("AxesNew.cs :: Instantiate Lines");
+        Debug.Log("Axes.cs :: Instantiate Lines");
 
         GameObject xAxis = Instantiate(
             linePrefab,
@@ -69,16 +69,16 @@ public class Axes : MonoBehaviour, GraphRenderer
 
     public void update(Graph graphData)
     {
+        Debug.Log("Axes.cs :: Recalculate Lines");
         (Vector3 min, Vector3 max) = graphData.getMinMax();
-        Vector3 startPosition = graphData.getPosition();
         visibility = graphData.getVisibility();
 
         Vector3 length = max-min;
 
         positions = (
-            new [] {startPosition, startPosition + new Vector3(length.x, 0, 0)},
-            new [] {startPosition, startPosition + new Vector3(0, length.y, 0)},
-            new [] {startPosition, startPosition + new Vector3(0, 0, length.z)});
+            new [] {min, min + new Vector3(length.x, 0, 0)},
+            new [] {min, min + new Vector3(0, length.y, 0)},
+            new [] {min, min + new Vector3(0, 0, length.z)});
 
         updated = true;
     }
