@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,6 +58,7 @@ public class Graph : MonoBehaviour
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
+    private List<(int, int)> indexList;
     private List<string> labelList;
     private List<Color> colorList;
     private Vector3 vectorMax;
@@ -78,7 +80,8 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Graph.cs :: Process data in Start");
+        Debug.Log("Graph.cs :: Process all data on Start");
+
         getData();
         processData();
         colorGraph();
@@ -91,6 +94,11 @@ public class Graph : MonoBehaviour
     public List<Vector3> getVectorList()
     {
         return vectorList;
+    }
+
+    public List<(int, int)> getIndicesList()
+    {
+        return indexList;
     }
 
     public List<string> getLabels()
@@ -130,6 +138,7 @@ public class Graph : MonoBehaviour
         getData();
         processData();
         colorGraph();
+        scaleData();
         graphUpdated = true;
     }
 
@@ -139,6 +148,7 @@ public class Graph : MonoBehaviour
         datatype = newDatatype;
         processData();
         colorGraph();
+        scaleData();
         graphUpdated = true;
     }
 
@@ -182,10 +192,10 @@ public class Graph : MonoBehaviour
             (vectorList, labelList) = ProcessScatterData.process(rawData);
             break;
         case DataType.TimeValue:
-            vectorList = ProcessSharePriceData.process(rawData);
+            (vectorList, indexList) = ProcessSharePriceData.process(rawData);
             break;
         case DataType.Orderbooks:
-            vectorList = ProcessOrderbookData.process(rawData);
+            (vectorList, indexList) = ProcessOrderbookData.process(rawData);
             break;
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");

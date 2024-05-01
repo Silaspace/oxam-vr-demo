@@ -5,6 +5,8 @@ using UnityEngine;
 using andywiecko.BurstTriangulator;
 using Unity.Collections;
 using Unity.Mathematics;
+using System.Linq;
+
 public class MeshGenerator : MonoBehaviour, GraphRenderer
 {
     // Private properties
@@ -46,11 +48,41 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         // Triangulate Mesh
         Debug.Log("MeshGenerator.cs :: Triangulate mesh");
 
-        // Turn vertices into float2s for triangulation
-        float2[] points = new float2[vertices.Length];
-        for (int p = 0; p < vertices.Length; p++)
+        //triangulate for each pair of indices
+        
+        List<List<int>> triangleList = new List<List<int>>();
+        List<(int, int)> indices = graphData.getIndicesList();
+        foreach((int, int) tuple in indices)
         {
-            points[p] = new(vertices[p].x, vertices[p].z);
+            int left = tuple.Item1;
+            int right = tuple.Item2;
+            Debug.Log("MeshGenerator.cs :: Triangulate indices " + left + " to " + right);
+            //triangulate the points [left, right)
+            int size = right - left;
+            int offset = left;
+            Vector3[] someVertices = new Vector3[size];
+            Array.Copy(vertices, left, someVertices, 0, size);
+            triangleList.Add(triangulate(someVertices.ToList(), offset));
+        }
+
+        triangles = triangleList.SelectMany(x => x).ToArray();
+        //triangles = triangulate(vertices.ToList(), 0).ToArray();
+        
+        //  Update
+        Debug.Log("MeshGenerator.cs :: Update");
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.colors = colors;
+        mesh.RecalculateNormals();
+	}
+
+    private List<int> triangulate(List<Vector3> someVertices, int offset)
+    {
+        // Turn vertices into float2s for triangulation
+        float2[] points = new float2[someVertices.Count];
+        for (int p = 0; p < someVertices.Count; p++)
+        {
+            points[p] = new(someVertices[p].x, someVertices[p].z);
         }
 
         // Run Triangulation
@@ -58,13 +90,6 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         using var triangulator = new Triangulator(capacity: 1024, Allocator.Persistent)
         {
             Input = { Positions = positions },
-            //Settings = {
-            //    RefineMesh = true,
-            //    RefinementThresholds = {
-            //        Area = 1f,
-            //        Angle = math.radians(20f)
-            //    },
-            //}
         };
 
         triangulator.Run();
@@ -74,13 +99,7 @@ public class MeshGenerator : MonoBehaviour, GraphRenderer
         int triLength = nativeOutputTriangles.Length;
         int[] outputTriangles = new int[triLength];
         nativeOutputTriangles.CopyTo(outputTriangles);
-        triangles = outputTriangles;
-        
-        //  Update
-        Debug.Log("MeshGenerator.cs :: Update");
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.colors = colors;
-        mesh.RecalculateNormals();
-	}
+
+        return outputTriangles.Select(x => x + offset).ToList();
+    }
 }
