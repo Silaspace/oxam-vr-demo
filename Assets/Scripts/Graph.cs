@@ -80,12 +80,7 @@ public class Graph : MonoBehaviour
 
     void Start()
     {
-        onPress();
-    }
-
-    void onPress()
-    {
-        Debug.Log("Graph.cs :: Pressed");
+        Debug.Log("Graph.cs :: Process all data on Start");
 
         getData();
         processData();
@@ -143,6 +138,7 @@ public class Graph : MonoBehaviour
         getData();
         processData();
         colorGraph();
+        scaleData();
         graphUpdated = true;
     }
 
@@ -152,6 +148,7 @@ public class Graph : MonoBehaviour
         datatype = newDatatype;
         processData();
         colorGraph();
+        scaleData();
         graphUpdated = true;
     }
 
