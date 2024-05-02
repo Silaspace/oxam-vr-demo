@@ -91,6 +91,10 @@ public class Graph : MonoBehaviour
         processData();  // 2
         scaleData();    // 3
         colorGraph();   // 4
+
+        if (filename == "Data/AppleOrderbook/orderbooks_appl") {
+           updateVisibility(true);
+        }
     }
 
     public List<Vector3> getVectorList()
