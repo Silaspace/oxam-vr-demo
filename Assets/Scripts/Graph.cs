@@ -58,6 +58,7 @@ public class Graph : MonoBehaviour
     private List<Dictionary<string, object>> rawData;
 
     private List<Vector3> vectorList;
+    private List<Vector3> vectorScaledList;
     private List<(int, int)> indexList;
     private List<string> labelList;
     private List<Color> colorList;
@@ -95,7 +96,7 @@ public class Graph : MonoBehaviour
 
     public List<Vector3> getVectorList()
     {
-        return vectorList;
+        return vectorScaledList;
     }
 
     public List<(int, int)> getIndicesList()
@@ -230,6 +231,16 @@ public class Graph : MonoBehaviour
             vectorMax = Vector3.Max(vectorMax, vectorList[i]);
             vectorMin = Vector3.Min(vectorMin, vectorList[i]);
         }
+
+        Debug.Log("Graph.cs :: Scale data to common values");
+        for (int i = 0; i < vectorList.Count; i++)
+        {
+            var vector = vectorList[i];
+            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -1, 1);
+            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
+            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
+            vectorList[i] = Vector3.Scale(vector, scale) + position;
+        }
     }
 
     private void chooseRenderer()
@@ -310,11 +321,9 @@ public class Graph : MonoBehaviour
 
         for (int i = 0; i < vectorList.Count; i++)
         {
-            var vector = vectorList[i];
-            vector.x = map(vector.x, vectorMin.x, vectorMax.x, -1, 1);
-            vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
-            vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
-            vectorList[i] = Vector3.Scale(vector, scale) + position;
+            // Scale vector
+            vectorScaledList.Add(
+                Vector3.Scale(vectorList[i], scale) + position);
 
             // Set scaledMin and scaledMax
             vectorScaledMax = Vector3.Max(vectorScaledMax, vectorList[i]);
