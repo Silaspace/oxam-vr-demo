@@ -126,6 +126,11 @@ public class Graph : MonoBehaviour
         return position;
     }
 
+    public Vector3 getScale()
+    {
+        return scale;
+    }
+
     public (Vector3, Vector3) getMinMax()
     {
         return (vectorScaledMin, vectorScaledMax);
@@ -172,6 +177,15 @@ public class Graph : MonoBehaviour
     {
         Debug.Log("Graph.cs :: Update graph visibility");
         visibility = newVisibility;
+        graphUpdated = true;
+    }
+
+    public void updateScale(Vector3 newScale)
+    {
+        Debug.Log("Graph.cs :: Update graph visibility");
+        scale = newScale;
+        scaleData();
+        colorGraph();
         graphUpdated = true;
     }
 
