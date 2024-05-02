@@ -197,7 +197,7 @@ public class ProcessOrderbookData
             }
 
             //add index pair to indices
-            if (currentBid > leftBorder && currentBid < rightBorder-1) 
+            if (currentBid > leftBorder && currentBid <= rightBorder-1) 
             {
                 indices.Add((leftIndex, currentIndex));
                 leftIndex = startIndex;
@@ -247,7 +247,7 @@ public class ProcessOrderbookData
             }
 
             //add index to indices
-            if (currentBid > leftBorder && currentBid < rightBorder-1)
+            if (currentBid > leftBorder && currentBid <= rightBorder-1)
             {
                 indices.Add((leftIndex, currentIndex));
                 leftIndex = startIndex;
