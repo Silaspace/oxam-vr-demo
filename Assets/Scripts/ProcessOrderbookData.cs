@@ -144,9 +144,9 @@ public class ProcessOrderbookData
         float maxShift = float.MinValue;
         foreach(var pair in minAsks.Zip(maxBids, Tuple.Create))
         {
-            maxShift = maxShift.Max(maxShift, pair.Item2 - pair.Item1);
+            maxShift = Math.Max(maxShift, pair.Item2.Value - pair.Item1.Value);
         }
-        maxPrice = maxPrice + maxShift
+        maxPrice = maxPrice + maxShift;
 
         //get a list of points to plot
         //for now we have:
