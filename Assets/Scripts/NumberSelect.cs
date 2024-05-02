@@ -35,4 +35,13 @@ public class NumberSelect : MonoBehaviour
 	}
 	text.text = number.ToString();
     }
+
+    public void set(int nb)
+    {
+	if(min <= nb && nb <= max)
+	{
+	    number = nb;
+	    text.text = number.ToString();
+	}
+    }
 }

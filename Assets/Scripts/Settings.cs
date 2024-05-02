@@ -17,6 +17,9 @@ public class Settings : MonoBehaviour
     public TMP_Dropdown colourDropdown;
     public Toggle visibilityToggle;
     public Toggle deleteToggle;
+    public NumberSelect xScale;
+    public NumberSelect yScale;
+    public NumberSelect zScale;
 
     // Scroll Manager, to scroll back to the main graph menu
     public PageScroll scrollManager;
@@ -24,6 +27,8 @@ public class Settings : MonoBehaviour
     // Graph and Tile gameobjects, to delete
     public GameObject graphTile;
     public GameObject graphObject;
+
+    private Vector3 scale;
 
     void Start()
     {
@@ -98,6 +103,10 @@ public class Settings : MonoBehaviour
 
 		visibilityToggle.isOn = graph.visibility;
 		deleteToggle.isOn = false;
+		scale = graph.getScale();
+		xScale.set((int)(scale.x * 4));
+		yScale.set((int)(scale.y * 4));
+		zScale.set((int)(scale.z * 4));
     }
 
     public void changeFile()
@@ -234,5 +243,23 @@ public class Settings : MonoBehaviour
     public void backButton()
     {
 		scrollManager.SetPageIndex(0);
-    }    
+    }
+
+    public void updateXScale()
+    {
+		scale.x = ((float)xScale.number)/4;
+		graph.updateScale(scale);
+    }
+
+    public void updateYScale()
+    {
+		scale.y = ((float)yScale.number)/4;
+		graph.updateScale(scale);
+    }
+
+    public void updateZScale()
+    {
+		scale.z = ((float)zScale.number)/4;
+		graph.updateScale(scale);
+    }
 }
