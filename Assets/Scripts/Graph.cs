@@ -191,6 +191,15 @@ public class Graph : MonoBehaviour
         graphUpdated = true;
     }
 
+    public void updatePosition(Vector3 newPosition)
+    {
+        Debug.Log("Graph.cs :: Update graph visibility");
+        position = newPosition;
+        scaleData();
+        colorGraph();
+        graphUpdated = true;
+    }
+
     private void getData()
     {
         Debug.Log("Graph.cs :: Fetch raw data from CSV");
