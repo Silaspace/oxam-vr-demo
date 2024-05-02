@@ -118,11 +118,6 @@ public class Graph : MonoBehaviour
         return visibility;
     }
 
-    public Vector3 getScale()
-    {
-        return scale;
-    }
-
     public Vector3 getPosition()
     {
         return position;
