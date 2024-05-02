@@ -140,8 +140,14 @@ public class ProcessOrderbookData
             }
         }
 
-        //TODO for now, we have bids and asks in the same list. we need to decide whether to do this as
-        //TODO two meshes or one big mesh with two colour gradients
+        //temp valley shift code
+        float maxShift = float.MinValue;
+        foreach(var pair in minAsks.Zip(maxBids, Tuple.Create))
+        {
+            maxShift = maxShift.Max(maxShift, pair.Item2 - pair.Item1);
+        }
+        maxPrice = maxPrice + maxShift
+
         //get a list of points to plot
         //for now we have:
         //x-axis: price
