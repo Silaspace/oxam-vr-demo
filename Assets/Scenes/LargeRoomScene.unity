@@ -6343,7 +6343,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00019836426}
+  m_AnchoredPosition: {x: 0, y: -0.00012207031}
   m_SizeDelta: {x: -44, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1087999917
@@ -13298,9 +13298,9 @@ MonoBehaviour:
   colourDropdown: {fileID: 999463470}
   visibilityToggle: {fileID: 1911412947}
   deleteToggle: {fileID: 868985203}
-  xScale: {fileID: 0}
-  yScale: {fileID: 0}
-  zScale: {fileID: 0}
+  xScale: {fileID: 181556080}
+  yScale: {fileID: 1034180725}
+  zScale: {fileID: 2138849201}
   scrollManager: {fileID: 867013344}
   graphTile: {fileID: 31964656}
   graphObject: {fileID: 216114162}
