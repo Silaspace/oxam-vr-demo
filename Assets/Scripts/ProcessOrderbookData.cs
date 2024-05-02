@@ -53,6 +53,10 @@ public class ProcessOrderbookData
         var bidSizeAxisKey = columnList[6];
         var askSizeAxisKey = columnList[10];
 
+        //temporary, used to shift the asks and amplify the valley
+        SortedDictionary<float, float> maxBids = new SortedDictionary<float, float>();
+        SortedDictionary<float, float> minAsks = new SortedDictionary<float, float>();
+
         // Get each entry from the points list
         // Maintain a dict for prices
         for (int i = 1; i < pointList.Count; i++)
@@ -71,6 +75,22 @@ public class ProcessOrderbookData
             //update min and max price
             minPrice = Math.Min(minPrice, entry.BidPrice);
             maxPrice = Math.Max(maxPrice, entry.AskPrice);
+
+            //temporary, used for shifting valley
+            if (minAsks.ContainsKey(entry.AskTime))
+            {
+                minAsks[entry.AskTime] = Math.Min(minAsks[entry.AskTime], entry.AskPrice)
+            } else 
+            {
+                minAsks.Add(entry.AskTime, entry.AskPrice)
+            }
+            if (maxBids.ContainsKey(entry.BidTime))
+            {
+                maxBids[entry.BidTime] = Math.Min(maxBids[entry.BidTime], entry.BidPrice)
+            } else 
+            {
+                maxBids.Add(entry.BidTime, entry.BidPrice)
+            }
 
             //add ask and bid to each dict
             //dict is used to calculate total size of bids at same time and same price
@@ -187,13 +207,16 @@ public class ProcessOrderbookData
         //repeat for asks but don't reverse dictionary
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
+            //temporary valley shift
+            float valleyShift = maxBids[timePoint.Key] - minAsks[timePoint.Key]
+
             //for each price in increasing order (so it is cumulative)
             int currentHeight = 0;
             float highPrice = 0.0f;
             int currentIndex = startIndex;
             foreach(KeyValuePair<float, int> ask in timePoint.Value)
             {
-                float xPos = ask.Key;
+                float xPos = ask.Key + valleyShift;
                 highPrice = xPos;
                 currentHeight += ask.Value; //increase currentHeight by the size of this bid
                 float yPos = currentHeight;
