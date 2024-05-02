@@ -82,13 +82,15 @@ public class Graph : MonoBehaviour
     {
         Debug.Log("Graph.cs :: Process all data on Start");
 
-        getData();
-        processData();
-        colorGraph();
-        scaleData();
+        // Find the appropriate rendering components
         chooseRenderer();
-
         axisRenderer = GetComponent<Axes>();
+
+        // Fetch and process initial data
+        getData();      // 1
+        processData();  // 2
+        scaleData();    // 3
+        colorGraph();   // 4
     }
 
     public List<Vector3> getVectorList()
@@ -261,8 +263,8 @@ public class Graph : MonoBehaviour
                 colorList.Add(
                     CustomColors.GetColor(
                         vectorList[i].y,
-                        vectorMin.y,
-                        vectorMax.y,
+                        vectorScaledMin.y,
+                        vectorScaledMax.y,
                         graphcolor));
             }
             break;
