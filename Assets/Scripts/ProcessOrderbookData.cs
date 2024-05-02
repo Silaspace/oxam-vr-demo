@@ -79,17 +79,17 @@ public class ProcessOrderbookData
             //temporary, used for shifting valley
             if (minAsks.ContainsKey(entry.AskTime))
             {
-                minAsks[entry.AskTime] = Math.Min(minAsks[entry.AskTime], entry.AskPrice)
+                minAsks[entry.AskTime] = Math.Min(minAsks[entry.AskTime], entry.AskPrice);
             } else 
             {
-                minAsks.Add(entry.AskTime, entry.AskPrice)
+                minAsks.Add(entry.AskTime, entry.AskPrice);
             }
             if (maxBids.ContainsKey(entry.BidTime))
             {
-                maxBids[entry.BidTime] = Math.Min(maxBids[entry.BidTime], entry.BidPrice)
+                maxBids[entry.BidTime] = Math.Max(maxBids[entry.BidTime], entry.BidPrice);
             } else 
             {
-                maxBids.Add(entry.BidTime, entry.BidPrice)
+                maxBids.Add(entry.BidTime, entry.BidPrice);
             }
 
             //add ask and bid to each dict
@@ -208,7 +208,7 @@ public class ProcessOrderbookData
         foreach(KeyValuePair<float, SortedDictionary<float, int>> timePoint in asks)
         {
             //temporary valley shift
-            float valleyShift = maxBids[timePoint.Key] - minAsks[timePoint.Key]
+            float valleyShift = maxBids[timePoint.Key] - minAsks[timePoint.Key];
 
             //for each price in increasing order (so it is cumulative)
             int currentHeight = 0;
