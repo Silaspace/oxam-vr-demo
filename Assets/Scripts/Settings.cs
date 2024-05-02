@@ -104,9 +104,16 @@ public class Settings : MonoBehaviour
 		visibilityToggle.isOn = graph.visibility;
 		deleteToggle.isOn = false;
 		scale = graph.getScale();
-		xScale.set((int)(scale.x * 4));
-		yScale.set((int)(scale.y * 4));
-		zScale.set((int)(scale.z * 4));
+		if(scale == null)
+		{
+		    Debug.Log("Settings.cs :: Scale was null");
+		}
+		else
+		{
+		    xScale.set((int)(scale.x * 4));
+		    yScale.set((int)(scale.y * 4));
+		    zScale.set((int)(scale.z * 4));
+		}
     }
 
     public void changeFile()
