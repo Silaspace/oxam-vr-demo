@@ -20,6 +20,9 @@ public class Settings : MonoBehaviour
     public NumberSelect xScale;
     public NumberSelect yScale;
     public NumberSelect zScale;
+    public NumberSelect xPos;
+    public NumberSelect yPos;
+    public NumberSelect zPos;
 
     // Scroll Manager, to scroll back to the main graph menu
     public PageScroll scrollManager;
@@ -29,6 +32,7 @@ public class Settings : MonoBehaviour
     public GameObject graphObject;
 
     private Vector3 scale;
+    private Vector3 position;
 
     void Start()
     {
@@ -104,16 +108,13 @@ public class Settings : MonoBehaviour
 		visibilityToggle.isOn = graph.visibility;
 		deleteToggle.isOn = false;
 		scale = graph.getScale();
-		if(scale == null)
-		{
-		    Debug.Log("Settings.cs :: Scale was null");
-		}
-		else
-		{
-		    xScale.set((int)(scale.x * 4));
-		    yScale.set((int)(scale.y * 4));
-		    zScale.set((int)(scale.z * 4));
-		}
+		xScale.set((int)(scale.x * 4));
+		yScale.set((int)(scale.y * 4));
+		zScale.set((int)(scale.z * 4));
+		position = graph.getPosition();
+		xPos.set((int)(scale.x * 5));
+		yPos.set((int)(scale.x * 5));
+		zPos.set((int)(scale.x * 5));
     }
 
     public void changeFile()
@@ -269,4 +270,23 @@ public class Settings : MonoBehaviour
 		scale.z = ((float)zScale.number)/4;
 		graph.updateScale(scale);
     }
+
+    public void updateXPos()
+    {
+		position.x = ((float)xPos.number)/5;
+		graph.updatePosition(position);
+    }
+
+    public void updateYPos()
+    {
+		position.y = ((float)yPos.number)/5;
+		graph.updatePosition(position);
+    }
+
+    public void updateZPos()
+    {
+		position.z = ((float)zPos.number)/5;
+		graph.updatePosition(position);
+    }
+	
 }
