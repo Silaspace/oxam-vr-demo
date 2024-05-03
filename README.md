@@ -4,10 +4,7 @@
 
 ## Running
 
-- Clone this repository.
-- [Set up the Meta development environment if you haven't done so already](https://developer.oculus.com/documentation/unity/unity-env-device-setup/#development-environment-setup).
-- [Set up Meta Quest Link](https://www.meta.com/en-gb/help/quest/articles/headsets-and-accessories/oculus-link/set-up-link/).
-- Build and run the application through the Meta quest link.
+- Sideload the `oxam-vr-demo.apk` file onto your Meta Quest 2, 3 or Pro headset.
 
 ## Datasets
 

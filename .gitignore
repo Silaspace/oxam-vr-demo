@@ -59,7 +59,7 @@ ExportedObj/
 sysinfo.txt
 
 # Builds
-*.apk
+# *.apk
 *.aab
 *.unitypackage
 *.app
@@ -78,5 +78,4 @@ crashlytics-build.properties
 Misc/music-genre-pca/*.csv
 .ipynb_checkpoints
 .DS_Store
-
 oxam-vr-demo_BurstDebugInformation_DoNotShip
