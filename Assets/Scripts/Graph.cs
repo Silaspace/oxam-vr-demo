@@ -237,7 +237,7 @@ public class Graph : MonoBehaviour
             vector.x = map(vector.x, vectorMin.x, vectorMax.x, -1, 1);
             vector.y = map(vector.y, vectorMin.y, vectorMax.y, 0, 2);
             vector.z = map(vector.z, vectorMin.z, vectorMax.z, -1, 1);
-            vectorList[i] = Vector3.Scale(vector, scale) + position;
+            vectorList[i] = vector;
         }
     }
 
@@ -316,8 +316,8 @@ public class Graph : MonoBehaviour
     {
         Debug.Log("Graph.cs :: Scale all vectors");
         vectorScaledList = new List<Vector3>();
-        vectorScaledMax = position;
-        vectorScaledMin = vectorScaledMax;
+        vectorScaledMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        vectorScaledMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
         for (int i = 0; i < vectorList.Count; i++)
         {

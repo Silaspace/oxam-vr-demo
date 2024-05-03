@@ -115,9 +115,9 @@ public class Settings : MonoBehaviour
 
 		position = graph.getPosition();
 		Debug.Log("Settings.cs :: Position is: " + position.ToString());
-		xPos.set((int)(position.x * 2));
-		yPos.set((int)(position.y * 2));
-		zPos.set((int)(position.z * 2));
+		xPos.set((int)(position.x * 4));
+		yPos.set((int)(position.y * 4));
+		zPos.set((int)(position.z * 4));
 		
     }
 
@@ -277,19 +277,19 @@ public class Settings : MonoBehaviour
 
     public void updateXPos()
     {
-		position.x = ((float)xPos.number)/2;
+		position.x = ((float)xPos.number)/4;
 		graph.updatePosition(position);
     }
 
     public void updateYPos()
     {
-		position.y = ((float)yPos.number)/2;
+		position.y = ((float)yPos.number)/4;
 		graph.updatePosition(position);
     }
 
     public void updateZPos()
     {
-		position.z = ((float)zPos.number)/2;
+		position.z = ((float)zPos.number)/4;
 		graph.updatePosition(position);
     }
 	
