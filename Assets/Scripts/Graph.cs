@@ -183,7 +183,6 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update graph visibility");
         scale = newScale;
         scaleData();
-        colorGraph();
         graphUpdated = true;
     }
 
@@ -192,7 +191,6 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update graph visibility");
         position = newPosition;
         scaleData();
-        colorGraph();
         graphUpdated = true;
     }
 
@@ -316,6 +314,8 @@ public class Graph : MonoBehaviour
 
     private void scaleData()
     {
+        Debug.Log("Graph.cs :: Scale all vectors");
+        vectorScaledList = new List<Vector3>();
         vectorScaledMax = position;
         vectorScaledMin = vectorScaledMax;
 
