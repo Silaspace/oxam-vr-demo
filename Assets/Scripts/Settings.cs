@@ -112,9 +112,11 @@ public class Settings : MonoBehaviour
 		yScale.set((int)(scale.y * 4));
 		zScale.set((int)(scale.z * 4));
 		position = graph.getPosition();
-		xPos.set((int)(scale.x * 5));
-		yPos.set((int)(scale.x * 5));
-		zPos.set((int)(scale.x * 5));
+		Debug.Log("Settings.cs :: Position is: " + position.ToString());
+		xPos.set((int)(position.x * 5));
+		yPos.set((int)(position.y * 5));
+		zPos.set((int)(position.z * 5));
+		
     }
 
     public void changeFile()
