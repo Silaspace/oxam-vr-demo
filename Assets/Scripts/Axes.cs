@@ -12,6 +12,11 @@ public class Axes : MonoBehaviour, GraphRenderer
     private LineRenderer xAxisLine;
     private LineRenderer yAxisLine;
     private LineRenderer zAxisLine;
+
+    private TextMeshPro xAxisTextMesh;
+    private TextMeshPro yAxisTextMesh;
+    private TextMeshPro zAxisTextMesh;
+
     private (Vector3[], Vector3[], Vector3[]) positions;
     private bool visibility = false;
     private bool updated = false;
@@ -29,6 +34,9 @@ public class Axes : MonoBehaviour, GraphRenderer
         xAxis.transform.SetParent(gameObject.transform, false);
         xAxisLine = xAxis.GetComponent<LineRenderer>();
         xAxisLine.enabled = false;
+        
+        xAxisTextMesh = xAxis.transform.GetChild(0).GetComponent<TextMeshPro>();
+        xAxisTextMesh.enabled = false;
 
         GameObject yAxis = Instantiate(
             linePrefab,
@@ -40,6 +48,9 @@ public class Axes : MonoBehaviour, GraphRenderer
         yAxisLine = yAxis.GetComponent<LineRenderer>();
         yAxisLine.enabled = false;
 
+        yAxisTextMesh = yAxis.transform.GetChild(0).GetComponent<TextMeshPro>();
+        yAxisTextMesh.enabled = false;
+
         GameObject zAxis = Instantiate(
             linePrefab,
             new Vector3(0, 0, 0),
@@ -49,6 +60,11 @@ public class Axes : MonoBehaviour, GraphRenderer
         zAxis.transform.SetParent(gameObject.transform, false);
         zAxisLine = zAxis.GetComponent<LineRenderer>();
         zAxisLine.enabled = false;
+
+        Debug.Log("Axes.cs :: attempting to set text");
+
+        zAxisTextMesh = zAxis.transform.GetChild(0).GetComponent<TextMeshPro>();
+        zAxisTextMesh.enabled = false;
     }
 
     void Update()
@@ -58,12 +74,15 @@ public class Axes : MonoBehaviour, GraphRenderer
             (var xPos, var yPos, var zPos) = positions;
             xAxisLine.SetPositions(xPos);
             xAxisLine.enabled = visibility;
+            xAxisTextMesh.enabled = visibility;
 
             yAxisLine.SetPositions(yPos);
             yAxisLine.enabled = visibility;
+            yAxisTextMesh.enabled = visibility;
 
             zAxisLine.SetPositions(zPos);
             zAxisLine.enabled = visibility;
+            zAxisTextMesh.enabled = visibility;
         }
     }
 
@@ -74,6 +93,22 @@ public class Axes : MonoBehaviour, GraphRenderer
         visibility = graphData.getVisibility();
 
         Vector3 length = max-min;
+
+        float offset = 0.07f;
+        float heightOffGround = min.y - offset;
+        
+        xAxisTextMesh.transform.localPosition = new Vector3(-1, heightOffGround, 0);
+        yAxisTextMesh.transform.localPosition = new Vector3(-1 - offset/1.414f, min.y + min.y / 2, -1 - offset/1.414f);
+        zAxisTextMesh.transform.localPosition = new Vector3(0, heightOffGround, -1);
+
+        xAxisTextMesh.transform.rotation = Quaternion.Euler(0, 90, 0);
+        yAxisTextMesh.transform.rotation = Quaternion.Euler(0, 45, 90);
+        zAxisTextMesh.transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        // TODO: set labels automatically
+        xAxisTextMesh.text = "X";
+        yAxisTextMesh.text = "Y";
+        zAxisTextMesh.text = "Z";
 
         positions = (
             new [] {min, min + new Vector3(length.x, 0, 0)},
