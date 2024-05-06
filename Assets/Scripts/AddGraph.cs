@@ -30,7 +30,9 @@ public class AddGraph : MonoBehaviour
 	if(text != null)
 	{
 	    Debug.Log("AddGraph.cs :: Setting text to Custom Graph " + (graphNumber + 1).ToString());
+	    Debug.Log("AddGraph.cs :: Current text is " + text.text);
 	    text.text = "Custom Graph " + (graphNumber + 1).ToString();
+	    Debug.Log("AddGraph.cs :: New text is " + text.text);
 	    graphNumber += 1;
 	}
 	else
