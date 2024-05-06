@@ -34,7 +34,7 @@ public class ProcessSharePriceData
     //   timeShort is the repeating time window (e.g. how far through a particular year we are), as the number of seconds through current period
     //   timeLong is the longer time window (e.g. what particular year it is), as a unix timestamp
     //   price is the value that should be the height of the mesh
-    public static (List<Vector3>, List<(int, int)>) process(List<Dictionary<string, object>> pointList)
+    public static (List<Vector3>, List<(int, int)>, List<string>) process(List<Dictionary<string, object>> pointList)
     {
         // Proposed Parameters
         float repeatPeriod = (float)(60.0 * 60.0 * 24.0 * 365.25);
@@ -88,6 +88,6 @@ public class ProcessSharePriceData
 
         List<(int, int)> indices = new List<(int, int)>();
         indices.Add((0, processedPoints.Count));
-        return (processedPoints, indices);
+        return (processedPoints, indices, new List<string>{"Time Short", "Price", "Time Long"});
     }
 }

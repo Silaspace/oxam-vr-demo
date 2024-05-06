@@ -90,6 +90,8 @@ public class Axes : MonoBehaviour, GraphRenderer
     {
         Debug.Log("Axes.cs :: Recalculate Lines");
         (Vector3 min, Vector3 max) = graphData.getMinMax();
+        Debug.Log("Graph min: " + min);
+        Debug.Log("Graph max: " + max);
         visibility = graphData.getVisibility();
 
         Vector3 length = max-min;
@@ -105,10 +107,10 @@ public class Axes : MonoBehaviour, GraphRenderer
         yAxisTextMesh.transform.rotation = Quaternion.Euler(0, 45, 90);
         zAxisTextMesh.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-        // TODO: set labels automatically
-        xAxisTextMesh.text = "X";
-        yAxisTextMesh.text = "Y";
-        zAxisTextMesh.text = "Z";
+        // TODO: work out why this needs to be the wrong way around
+        xAxisTextMesh.text = graphData.zAxisLabel;
+        yAxisTextMesh.text = graphData.yAxisLabel;
+        zAxisTextMesh.text = graphData.xAxisLabel;
 
         positions = (
             new [] {min, min + new Vector3(length.x, 0, 0)},

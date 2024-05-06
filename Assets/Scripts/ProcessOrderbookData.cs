@@ -33,7 +33,7 @@ public class ProcessOrderbookData
         return (float) dt.Minute + 0.166666f*(dt.Second/10);
     }
 
-    public static (List<Vector3>, List<(int, int)>) process(List<Dictionary<string, object>> pointList)
+    public static (List<Vector3>, List<(int, int)>, List<string>, List<string>) process(List<Dictionary<string, object>> pointList)
     {
         //dictionary of time to (price, count) for bids and asks
         SortedDictionary<float, SortedDictionary<float, int>> bids = new SortedDictionary<float, SortedDictionary<float, int>>();
@@ -157,6 +157,8 @@ public class ProcessOrderbookData
 
         //we use [leftIndex, currentIndex) for each triangulation
         List<(int, int)> indices = new List<(int, int)>();
+        List<string> labels = new List<string>();
+
         int startIndex = 0;
         int leftIndex = 0;
         int leftBorder = 0;
@@ -179,6 +181,7 @@ public class ProcessOrderbookData
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                labels.Add("bid");
                 currentIndex += 1;
             }
 
@@ -187,6 +190,7 @@ public class ProcessOrderbookData
             {
                 currentIndex += 1;
                 positions.Add(new Vector3(i, currentHeight, timePoint.Key));
+                labels.Add("bid");
             }
 
             //if this isn't the time with the minimum price
@@ -194,6 +198,7 @@ public class ProcessOrderbookData
             {
                 currentIndex += 1;
                 positions.Add(new Vector3(minPrice, currentHeight, timePoint.Key));
+                labels.Add("bid");
             }
 
             //add index pair to indices
@@ -201,6 +206,7 @@ public class ProcessOrderbookData
             {
                 indices.Add((leftIndex, currentIndex));
                 leftIndex = startIndex;
+                labels.Add("bid");
             }
             startIndex = currentIndex;
             currentBid += 1;
@@ -229,6 +235,7 @@ public class ProcessOrderbookData
                 float zPos = timePoint.Key;
 
                 positions.Add(new Vector3(xPos, yPos, zPos));
+                labels.Add("ask");
                 currentIndex += 1;
             }
 
@@ -237,6 +244,7 @@ public class ProcessOrderbookData
             {
                 currentIndex += 1;
                 positions.Add(new Vector3(i, currentHeight, timePoint.Key));
+                labels.Add("ask");
             }
 
             //if this isn't the time with the maximum price
@@ -244,6 +252,7 @@ public class ProcessOrderbookData
             {
                 currentIndex += 1;
                 positions.Add(new Vector3(maxPrice, currentHeight, timePoint.Key));
+                labels.Add("ask");
             }
 
             //add index to indices
@@ -257,7 +266,7 @@ public class ProcessOrderbookData
         }
 
         // Return positions and the indices of the points we must use for each triangulation
-        return (positions, indices);
+        return (positions, indices, labels, new List<string>{"Price", "Size", "Time"});
     }
 }
 
