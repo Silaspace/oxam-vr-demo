@@ -74,7 +74,7 @@ public class Graph : MonoBehaviour
     private bool graphUpdated;
 
     // Used for debugging
-    private static string renderOnStartFilename = "Data/RadcliffeTemperature/temp";
+    private static string renderOnStartFilename = "";
     
 
     void Update() 
