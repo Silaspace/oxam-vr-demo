@@ -57,7 +57,7 @@ MonoBehaviour:
   datatype: 1
   graphcolor: 5
   scale: {x: 2, y: 2, z: 2}
-  position: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0.5, z: 0}
   visibility: 0
   showAxis: 0
 --- !u!114 &7659985591270081971
@@ -4943,4 +4943,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7056d3561ce774ce498ab61fb6cc5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 5424471051625415404, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
+  linePrefab: {fileID: 5135537524266716524, guid: b58e7a4459abf42bc8f5be33415949b7, type: 3}
