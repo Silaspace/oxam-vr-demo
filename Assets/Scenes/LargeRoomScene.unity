@@ -30071,6 +30071,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5469880009452361474, guid: ed2b83f49c2b944d5b2fccaf9dbada8c, type: 3}
+      propertyPath: filename
+      value: Data/MusicGenrePCA/pca_3d_kernel
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

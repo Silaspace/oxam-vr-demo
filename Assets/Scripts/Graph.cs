@@ -294,7 +294,7 @@ public class Graph : MonoBehaviour
             {
                 colorList.Add(
                     CustomColors.GetColor(
-                        vectorList[i].y,
+                        vectorScaledList[i].y,
                         vectorScaledMin.y,
                         vectorScaledMax.y,
                         graphcolor));

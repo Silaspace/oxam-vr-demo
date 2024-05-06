@@ -1,6 +1,5 @@
 #=Name,Path
 Apple Orderbook,Data/AppleOrderbook/orderbooks_appl,
-Music Genre PCA 2D,Data/MusicGenrePCA/pca_2d,
-Music Genre PCA 3D,Data/MusicGenrePCA/pca_3d,
+Music Genre PCA 3D,Data/MusicGenrePCA/pca_3d_kernel,
 Radcliffe Observatory Temperature,Data/RadcliffeTemperature/temp,
 Royal Mail Share Price,Data/RoyalMailSharePrice/price,
