@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class AddGraph : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class AddGraph : MonoBehaviour
     public GameObject graphPrefab;
     public Settings settings;
     public PageScroll scrollManager;
+
+    private int graphNumber = 1;
 
     public void onPress(){
         Debug.Log("AddGraph.cs :: Instantiate a new tile");
@@ -22,6 +25,13 @@ public class AddGraph : MonoBehaviour
             graphPrefab,
             new Vector3(0, 0, 2.5f),
             Quaternion.identity);
+
+        TextMeshProUGUI text = newTile.GetComponentInChildren<TextMeshProUGUI>();
+
+	    Debug.Log("AddGraph.cs :: Setting text to Custom Graph " + graphNumber.ToString());
+	    text.text = "Custom Graph " + graphNumber.ToString();
+	    Debug.Log("AddGraph.cs :: New text is " + text.text);
+	    graphNumber += 1;
 
         Debug.Log("AddGraph.cs :: Set tile parent");
         newTile.transform.SetParent(tileContainer.transform, false);
