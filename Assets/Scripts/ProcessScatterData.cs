@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 public class ProcessScatterData
 {
-    public static (List<Vector3>, List<string>) process(List<Dictionary<string, object>> pointList)
+    public static (List<Vector3>, List<string>, List<string>) process(List<Dictionary<string, object>> pointList)
     {
         // Indices for columns to be assigned - potential parameters
         int xAxis = 0;
@@ -42,6 +42,6 @@ public class ProcessScatterData
 
         // Return
         Debug.Log("GetData.cs :: Return vectors and labels");
-        return (vectorList, labels);
+        return (vectorList, labels, new List<string>{xAxisKey, yAxisKey, zAxisKey});
     }
 }

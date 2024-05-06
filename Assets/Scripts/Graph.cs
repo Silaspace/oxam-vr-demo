@@ -52,6 +52,10 @@ public class Graph : MonoBehaviour
     public bool visibility = false;
     public bool showAxis = false;
 
+    public string xAxisLabel = "X";
+    public string yAxisLabel = "Y";
+    public string zAxisLabel = "Z";
+
     // Internal state
     private GraphRenderer graphRenderer;
     private GraphRenderer axisRenderer;
@@ -62,12 +66,16 @@ public class Graph : MonoBehaviour
     private List<(int, int)> indexList;
     private List<string> labelList;
     private List<Color> colorList;
+    private List<string> columnList;
     private Vector3 vectorMax;
     private Vector3 vectorMin;
     private Vector3 vectorScaledMax;
     private Vector3 vectorScaledMin;
     private bool graphUpdated;
 
+    // Used for debugging
+    private static string renderOnStartFilename = "Data/RadcliffeTemperature/temp";
+    
 
     void Update() 
 	{
@@ -92,6 +100,13 @@ public class Graph : MonoBehaviour
         processData();  // 2
         scaleData();    // 3
         colorGraph();   // 4
+
+        if (filename == renderOnStartFilename)
+        {
+            visibility = true;
+            showAxis = true;
+            graphUpdated = true;
+        }
     }
 
     public List<Vector3> getVectorList()
@@ -208,18 +223,22 @@ public class Graph : MonoBehaviour
         switch(datatype) 
         {
         case DataType.Scatter:
-            (vectorList, labelList) = ProcessScatterData.process(rawData);
+            (vectorList, labelList, columnList) = ProcessScatterData.process(rawData);
             break;
         case DataType.TimeValue:
-            (vectorList, indexList) = ProcessSharePriceData.process(rawData);
+            (vectorList, indexList, columnList) = ProcessSharePriceData.process(rawData);
             break;
         case DataType.Orderbooks:
-            (vectorList, indexList) = ProcessOrderbookData.process(rawData);
+            (vectorList, indexList, labelList, columnList) = ProcessOrderbookData.process(rawData);
             break;
         case DataType.None:
             Debug.Log("Graph.cs :: No Datatype selected");
             break;
         }
+
+        xAxisLabel = columnList[0];
+        yAxisLabel = columnList[1];
+        zAxisLabel = columnList[2];
 
         // Update other properties based on the new vectorList
         Debug.Log("Graph.cs :: Set vectorMax and vectorMin");
@@ -326,8 +345,9 @@ public class Graph : MonoBehaviour
                 Vector3.Scale(vectorList[i], scale) + position);
 
             // Set scaledMin and scaledMax
-            vectorScaledMax = Vector3.Max(vectorScaledMax, vectorList[i]);
-            vectorScaledMin = Vector3.Min(vectorScaledMin, vectorList[i]);
+            vectorScaledMax = Vector3.Max(vectorScaledMax, vectorScaledList[i]);
+
+            vectorScaledMin = Vector3.Min(vectorScaledMin, vectorScaledList[i]);
         }
     }
 
