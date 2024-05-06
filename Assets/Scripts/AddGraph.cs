@@ -26,19 +26,12 @@ public class AddGraph : MonoBehaviour
             new Vector3(0, 0, 2.5f),
             Quaternion.identity);
 
-        TextMeshProUGUI text = GetComponentInChildren<TextMeshProUGUI>();
-	if(text != null)
-	{
-	    Debug.Log("AddGraph.cs :: Setting text to Custom Graph " + (graphNumber + 1).ToString());
-	    Debug.Log("AddGraph.cs :: Current text is " + text.text);
-	    text.text = "Custom Graph " + (graphNumber + 1).ToString();
+        TextMeshProUGUI text = newTile.GetComponentInChildren<TextMeshProUGUI>();
+
+	    Debug.Log("AddGraph.cs :: Setting text to Custom Graph " + graphNumber.ToString());
+	    text.text = "Custom Graph " + graphNumber.ToString();
 	    Debug.Log("AddGraph.cs :: New text is " + text.text);
 	    graphNumber += 1;
-	}
-	else
-	{
-	    Debug.Log("AddGraph.cs :: Returned text was null");
-	}
 
         Debug.Log("AddGraph.cs :: Set tile parent");
         newTile.transform.SetParent(tileContainer.transform, false);
