@@ -74,7 +74,7 @@ public class Graph : MonoBehaviour
     private bool graphUpdated;
 
     // Used for debugging
-    private static string renderOnStartFilename = "";
+    private static string renderOnStartFilename = "Data/RadcliffeTemperature/temp";
     
 
     void Update() 
@@ -100,6 +100,9 @@ public class Graph : MonoBehaviour
         processData();  // 2
         scaleData();    // 3
         colorGraph();   // 4
+
+        // updatePosition(new Vector3(2, 0, 0));
+        // updateScale(new Vector3(1, 2, 3));
 
         if (filename == renderOnStartFilename)
         {
@@ -206,6 +209,7 @@ public class Graph : MonoBehaviour
         Debug.Log("Graph.cs :: Update graph visibility");
         position = newPosition;
         scaleData();
+        axisRenderer.update(this);
         graphUpdated = true;
     }
 

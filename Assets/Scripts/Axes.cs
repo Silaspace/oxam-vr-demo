@@ -88,7 +88,7 @@ public class Axes : MonoBehaviour, GraphRenderer
 
     public void update(Graph graphData)
     {
-        Debug.Log("Axes.cs :: Recalculate Lines");
+        Debug.Log("Axes.cs :: Recalculate Lines " + graphData.filename);
         (Vector3 min, Vector3 max) = graphData.getMinMax();
         Debug.Log("Graph min: " + min);
         Debug.Log("Graph max: " + max);
@@ -99,9 +99,9 @@ public class Axes : MonoBehaviour, GraphRenderer
         float offset = 0.07f;
         float heightOffGround = min.y - offset;
         
-        xAxisTextMesh.transform.localPosition = new Vector3(-1, heightOffGround, 0);
-        yAxisTextMesh.transform.localPosition = new Vector3(-1 - offset/1.414f, min.y + min.y / 2, -1 - offset/1.414f);
-        zAxisTextMesh.transform.localPosition = new Vector3(0, heightOffGround, -1);
+        xAxisTextMesh.transform.localPosition = min + new Vector3(0, -offset, length.z / 2);
+        yAxisTextMesh.transform.localPosition = min + new Vector3(- offset/1.414f, length.y / 2, - offset/1.414f);
+        zAxisTextMesh.transform.localPosition = min + new Vector3(length.x / 2, -offset, 0);
 
         xAxisTextMesh.transform.rotation = Quaternion.Euler(0, 90, 0);
         yAxisTextMesh.transform.rotation = Quaternion.Euler(0, 45, 90);
