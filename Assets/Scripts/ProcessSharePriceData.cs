@@ -88,6 +88,6 @@ public class ProcessSharePriceData
 
         List<(int, int)> indices = new List<(int, int)>();
         indices.Add((0, processedPoints.Count));
-        return (processedPoints, indices, new List<string>{"Time Short", "Price", "Time Long"});
+        return (processedPoints, indices, new List<string>{"Time Short", columnList[1], "Time Long"});
     }
 }
